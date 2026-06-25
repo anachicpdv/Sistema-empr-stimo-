@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meus Empréstimos V6 Premium</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f4f8}
+.header{background:#2563eb;color:#fff;padding:18px;display:flex;justify-content:space-between;align-items:center}
+.screen{display:none}.active{display:block}
+.wrap{padding:16px 16px 90px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:#fff;border-radius:22px;padding:16px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.icon{width:50px;height:50px;border-radius:50%;margin:auto;display:flex;align-items:center;justify-content:center}
+.b{background:#dbeafe;color:#2563eb}.g{background:#dcfce7;color:#16a34a}.o{background:#ffedd5;color:#ea580c}
+.card h3{margin:10px 0 0;font-size:14px;color:#666}
+.card h2{margin:8px 0 0}
+.section{display:flex;justify-content:space-between;margin:22px 0 10px}
+.panel{background:#fff;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden}
+.item{padding:14px;border-bottom:1px solid #eee}
+.item:last-child{border-bottom:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.box{background:#fff;border-radius:20px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+input,button{width:100%;padding:12px;margin-top:8px;border-radius:12px;border:1px solid #ddd}
+.btn{background:#2563eb;color:#fff;border:none}
+.bottom{position:fixed;bottom:0;left:0;right:0;height:72px;background:#fff;border-top:1px solid #e5e7eb;display:flex}
+.bottom button{flex:1;border:none;background:none;color:#9ca3af}
+.bottom .on{color:#2563eb}
+</style>
+</head>
+<body>
+
+<div class="header">
+<i class="fas fa-bars"></i>
+<h2>Meus Empréstimos</h2>
+<i class="fas fa-plus"></i>
+</div>
+
+<div id="inicio" class="screen active">
+<div class="wrap">
+<div class="cards">
+<div class="card"><div class="icon b"><i class="fas fa-dollar-sign"></i></div><h3>Emprestado</h3><h2>R$ 0,00</h2></div>
+<div class="card"><div class="icon g"><i class="fas fa-arrow-trend-up"></i></div><h3>A Receber</h3><h2>R$ 0,00</h2></div>
+<div class="card"><div class="icon o"><i class="fas fa-clock"></i></div><h3>Contratos</h3><h2>0</h2></div>
+</div>
+
+<div class="section"><b>Próximos Vencimentos</b><span>Ver todos</span></div>
+<div class="panel"><div class="item">Nenhum empréstimo ativo.</div></div>
+
+<div class="section"><b>Empréstimos em Atraso</b><span style="color:#ef4444">Ver todos</span></div>
+<div class="panel"><div class="item">Nenhum atraso encontrado.</div></div>
+
+<div class="grid">
+<div class="box"><b>Clientes</b><br><small>Gerenciar clientes</small></div>
+<div class="box"><b>Novo Empréstimo</b><br><small>Cadastrar empréstimo</small></div>
+<div class="box"><b>Calendário</b><br><small>Controle de vencimentos</small></div>
+<div class="box"><b>Relatórios</b><br><small>Resumo financeiro</small></div>
+</div>
+</div>
+</div>
+
+<div id="clientes" class="screen">
+<div class="wrap"><div class="box">
+<h3>Cadastrar Cliente</h3>
+<input placeholder="Nome">
+<input placeholder="WhatsApp">
+<button class="btn">Salvar Cliente</button>
+</div></div>
+</div>
+
+<div id="emprestimos" class="screen">
+<div class="wrap"><div class="box">
+<h3>Novo Empréstimo</h3>
+<input placeholder="Cliente">
+<input placeholder="Valor">
+<input type="date">
+<button class="btn">Salvar Empréstimo</button>
+</div></div>
+</div>
+
+<div id="config" class="screen">
+<div class="wrap"><div class="box">
+<h3>Configurações</h3>
+<p>Área preparada para futuras funções.</p>
+</div></div>
+</div>
+
+<div class="bottom">
+<button class="on" onclick="tab('inicio',this)"><i class="fas fa-home"></i><br>Início</button>
+<button onclick="tab('clientes',this)"><i class="fas fa-users"></i><br>Clientes</button>
+<button onclick="tab('emprestimos',this)"><i class="fas fa-money-bill"></i><br>Empréstimos</button>
+<button onclick="tab('config',this)"><i class="fas fa-gear"></i><br>Ajustes</button>
+</div>
+
+<script>
+function tab(id,el){
+document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('.bottom button').forEach(x=>x.classList.remove('on'));
+el.classList.add('on');
+}
+</script>
+
+</body>
+</html>
