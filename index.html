@@ -1,105 +1,408 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meus Empréstimos V6 Premium</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f4f8}
-.header{background:#2563eb;color:#fff;padding:18px;display:flex;justify-content:space-between;align-items:center}
-.screen{display:none}.active{display:block}
-.wrap{padding:16px 16px 90px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card{background:#fff;border-radius:22px;padding:16px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-.icon{width:50px;height:50px;border-radius:50%;margin:auto;display:flex;align-items:center;justify-content:center}
-.b{background:#dbeafe;color:#2563eb}.g{background:#dcfce7;color:#16a34a}.o{background:#ffedd5;color:#ea580c}
-.card h3{margin:10px 0 0;font-size:14px;color:#666}
-.card h2{margin:8px 0 0}
-.section{display:flex;justify-content:space-between;margin:22px 0 10px}
-.panel{background:#fff;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden}
-.item{padding:14px;border-bottom:1px solid #eee}
-.item:last-child{border-bottom:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-.box{background:#fff;border-radius:20px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-input,button{width:100%;padding:12px;margin-top:8px;border-radius:12px;border:1px solid #ddd}
-.btn{background:#2563eb;color:#fff;border:none}
-.bottom{position:fixed;bottom:0;left:0;right:0;height:72px;background:#fff;border-top:1px solid #e5e7eb;display:flex}
-.bottom button{flex:1;border:none;background:none;color:#9ca3af}
-.bottom .on{color:#2563eb}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Empréstimos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        lightBg: '#F8FAFC',
+                    },
+                    fontFamily: { sans: ['Arial', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800">
 
-<div class="header">
-<i class="fas fa-bars"></i>
-<h2>Meus Empréstimos</h2>
-<i class="fas fa-plus"></i>
-</div>
+<div id="app">
 
-<div id="inicio" class="screen active">
-<div class="wrap">
-<div class="cards">
-<div class="card"><div class="icon b"><i class="fas fa-dollar-sign"></i></div><h3>Emprestado</h3><h2>R$ 0,00</h2></div>
-<div class="card"><div class="icon g"><i class="fas fa-arrow-trend-up"></i></div><h3>A Receber</h3><h2>R$ 0,00</h2></div>
-<div class="card"><div class="icon o"><i class="fas fa-clock"></i></div><h3>Contratos</h3><h2>0</h2></div>
-</div>
+    <!-- Tela Início -->
+    <div id="telaInicio" class="page">
+        <header class="bg-primary text-white shadow-md">
+            <div class="flex items-center justify-between px-5 py-4">
+                <i class="fa fa-bars text-xl"></i>
+                <h1 class="text-xl font-semibold">Meus Empréstimos</h1>
+                <button onclick="abrirBackup()" class="text-xl">+</button>
+            </div>
+        </header>
 
-<div class="section"><b>Próximos Vencimentos</b><span>Ver todos</span></div>
-<div class="panel"><div class="item">Nenhum empréstimo ativo.</div></div>
+        <main class="px-4 py-5">
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                        <i class="fa fa-dollar text-primary text-lg"></i>
+                    </div>
+                    <p class="text-sm text-gray-500">Total Emprestado</p>
+                    <p class="text-lg font-bold">R$ <span id="totalEmprestado">0,00</span></p>
+                    <p class="text-xs text-gray-500 mt-1"><span id="qtdContratos">0</span> contratos</p>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                        <i class="fa fa-dollar text-success text-lg"></i>
+                    </div>
+                    <p class="text-sm text-gray-500">Total a Receber</p>
+                    <p class="text-lg font-bold">R$ <span id="totalReceber">0,00</span></p>
+                    <p class="text-xs text-gray-500 mt-1"><span id="qtdContratos2">0</span> contratos</p>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                        <i class="fa fa-clock-o text-warning text-lg"></i>
+                    </div>
+                    <p class="text-sm text-gray-500">Em Aberto</p>
+                    <p class="text-lg font-bold">R$ <span id="totalAberto">0,00</span></p>
+                    <p class="text-xs text-gray-500 mt-1"><span id="qtdAberto">0</span> contratos</p>
+                </div>
+            </div>
 
-<div class="section"><b>Empréstimos em Atraso</b><span style="color:#ef4444">Ver todos</span></div>
-<div class="panel"><div class="item">Nenhum atraso encontrado.</div></div>
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-semibold">Empréstimos Próximos do Vencimento</h3>
+                    <a href="#" class="text-primary text-sm">Ver todos</a>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 text-center text-gray-500">
+                    Nenhum contrato ativo nos próximos dias.
+                </div>
+            </div>
 
-<div class="grid">
-<div class="box"><b>Clientes</b><br><small>Gerenciar clientes</small></div>
-<div class="box"><b>Novo Empréstimo</b><br><small>Cadastrar empréstimo</small></div>
-<div class="box"><b>Calendário</b><br><small>Controle de vencimentos</small></div>
-<div class="box"><b>Relatórios</b><br><small>Resumo financeiro</small></div>
-</div>
-</div>
-</div>
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-semibold">Empréstimos em Atraso</h3>
+                    <a href="#" class="text-danger text-sm font-medium">Ver todos</a>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 text-center text-gray-500">
+                    Nenhum contrato em atraso detectado.
+                </div>
+            </div>
 
-<div id="clientes" class="screen">
-<div class="wrap"><div class="box">
-<h3>Cadastrar Cliente</h3>
-<input placeholder="Nome">
-<input placeholder="WhatsApp">
-<button class="btn">Salvar Cliente</button>
-</div></div>
-</div>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
+                            <i class="fa fa-user text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Clientes</p>
+                            <p class="text-xs text-gray-500">Gerenciar cadastros</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </button>
 
-<div id="emprestimos" class="screen">
-<div class="wrap"><div class="box">
-<h3>Novo Empréstimo</h3>
-<input placeholder="Cliente">
-<input placeholder="Valor">
-<input type="date">
-<button class="btn">Salvar Empréstimo</button>
-</div></div>
-</div>
+                <button onclick="mostrarTela('telaLancar')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
+                            <i class="fa fa-money text-success"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Novo Empréstimo</p>
+                            <p class="text-xs text-gray-500">Lançar valor</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </button>
 
-<div id="config" class="screen">
-<div class="wrap"><div class="box">
-<h3>Configurações</h3>
-<p>Área preparada para futuras funções.</p>
-</div></div>
-</div>
+                <button class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center">
+                            <i class="fa fa-calendar text-warning"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Calendário</p>
+                            <p class="text-xs text-gray-500">Datas de retorno</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </button>
 
-<div class="bottom">
-<button class="on" onclick="tab('inicio',this)"><i class="fas fa-home"></i><br>Início</button>
-<button onclick="tab('clientes',this)"><i class="fas fa-users"></i><br>Clientes</button>
-<button onclick="tab('emprestimos',this)"><i class="fas fa-money-bill"></i><br>Empréstimos</button>
-<button onclick="tab('config',this)"><i class="fas fa-gear"></i><br>Ajustes</button>
+                <button class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center">
+                            <i class="fa fa-bar-chart text-purple-500"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Relatórios</p>
+                            <p class="text-xs text-gray-500">Projeção de lucros</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </button>
+            </div>
+        </main>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t flex justify-around py-2">
+            <button onclick="mostrarTela('telaInicio')" class="text-center text-primary">
+                <i class="fa fa-home text-xl"></i>
+                <p class="text-xs">Início</p>
+            </button>
+            <button onclick="mostrarTela('telaClientes')" class="text-center text-gray-500">
+                <i class="fa fa-users text-xl"></i>
+                <p class="text-xs">Clientes</p>
+            </button>
+            <button onclick="mostrarTela('telaLancar')" class="text-center text-gray-500">
+                <i class="fa fa-money text-xl"></i>
+                <p class="text-xs">Empréstimos</p>
+            </button>
+            <button onclick="limparTudo()" class="text-center text-gray-500">
+                <i class="fa fa-trash text-xl"></i>
+                <p class="text-xs">Limpar Tudo</p>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Tela Clientes -->
+    <div id="telaClientes" class="page hidden pb-20">
+        <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
+            <button onclick="mostrarTela('telaInicio')">
+                <i class="fa fa-arrow-left text-gray-700"></i>
+            </button>
+            <h2 class="text-lg font-semibold">Cadastrar Novo Cliente</h2>
+        </header>
+
+        <main class="px-4 py-5">
+            <form id="formCliente" class="space-y-4 mb-8">
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Nome Completo</label>
+                    <input type="text" id="nomeCliente" placeholder="Ex: João Silva" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">WhatsApp (Apenas números com DDD)</label>
+                    <input type="tel" id="foneCliente" placeholder="Ex: 85999999999" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Rua / Logradouro</label>
+                    <input type="text" id="enderecoCliente" placeholder="Ex: Av. Santos Dumont" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Número</label>
+                        <input type="text" id="numeroCliente" placeholder="123" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Bairro</label>
+                        <input type="text" id="bairroCliente" placeholder="Ex: Aldeota" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-success hover:bg-success/90 text-white font-semibold py-3 rounded-lg">
+                    Adicionar Cliente
+                </button>
+            </form>
+
+            <h3 class="font-semibold mb-3">Clientes Cadastrados</h3>
+            <div id="listaClientes" class="space-y-3">
+                <div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">
+                    Nenhum cliente cadastrado ainda.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tela Lançar Empréstimo -->
+    <div id="telaLancar" class="page hidden pb-20">
+        <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
+            <button onclick="mostrarTela('telaInicio')">
+                <i class="fa fa-arrow-left text-gray-700"></i>
+            </button>
+            <h2 class="text-lg font-semibold">Lançar Empréstimo</h2>
+        </header>
+
+        <main class="px-4 py-5">
+            <form id="formEmprestimo" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Selecione o Cliente</label>
+                    <select id="clienteEmprestimo" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">-- Escolha um cliente --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Valor Emprestado (R$)</label>
+                    <input type="number" step="0.01" id="valorEmprestimo" placeholder="0,00" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Taxa de Juros (%)</label>
+                    <input type="number" step="0.01" id="jurosEmprestimo" placeholder="Ex: 10" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Data de Vencimento</label>
+                    <input type="date" id="vencimentoEmprestimo" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Forma de Pagamento</label>
+                    <select id="pagamentoEmprestimo" class="w-full border rounded-lg px-3 py-2">
+                        <option>Quitação Integral no Vencimento</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg">
+                    Confirmar e Lançar
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <!-- Modal Backup -->
+    <div id="modalBackup" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-5 w-[90%] max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-semibold text-lg">Opções de Segurança</h3>
+                <button onclick="fecharBackup()">&times;</button>
+            </div>
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-3">Salve um arquivo com seus dados externamente para não perdê-los se limpar o histórico do seu aparelho.</p>
+                <button onclick="baixarBackup()" class="w-full bg-primary text-white py-2 rounded-lg mb-2">
+                    <i class="fa fa-download mr-2"></i> Baixar Arquivo
+                </button>
+                <label class="block w-full bg-gray-300 text-center py-2 rounded-lg cursor-pointer">
+                    <i class="fa fa-upload mr-2"></i> Restaurar Dados
+                    <input type="file" id="arquivoRestaurar" class="hidden" accept=".json">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div id="msgSucesso" class="fixed bottom-20 left-4 right-4 bg-green-500 text-white p-3 rounded-lg shadow-lg text-center z-40 hidden">
+        ✅ Cliente adicionado com sucesso!
+    </div>
+
 </div>
 
 <script>
-function tab(id,el){
-document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelectorAll('.bottom button').forEach(x=>x.classList.remove('on'));
-el.classList.add('on');
+function mostrarTela(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    atualizarDados();
 }
+
+let dados = JSON.parse(localStorage.getItem('dadosEmprestimos')) || { clientes: [], emprestimos: [] };
+
+function salvarDados() {
+    localStorage.setItem('dadosEmprestimos', JSON.stringify(dados));
+    atualizarDados();
+}
+
+function atualizarDados() {
+    let totalEmp = 0, totalRec = 0, qtd = dados.emprestimos.length;
+    dados.emprestimos.forEach(e => {
+        let valorFinal = e.valor * (1 + e.juros / 100);
+        totalEmp += e.valor;
+        totalRec += valorFinal;
+    });
+    document.getElementById('totalEmprestado').textContent = totalEmp.toFixed(2).replace('.', ',');
+    document.getElementById('totalReceber').textContent = totalRec.toFixed(2).replace('.', ',');
+    document.getElementById('totalAberto').textContent = totalRec.toFixed(2).replace('.', ',');
+    document.getElementById('qtdContratos').textContent = qtd;
+    document.getElementById('qtdContratos2').textContent = qtd;
+    document.getElementById('qtdAberto').textContent = qtd;
+
+    atualizarListaClientes();
+    atualizarSelectClientes();
+}
+
+document.getElementById('formCliente').addEventListener('submit', e => {
+    e.preventDefault();
+    const cliente = {
+        id: Date.now(),
+        nome: document.getElementById('nomeCliente').value.trim(),
+        fone: document.getElementById('foneCliente').value.trim(),
+        endereco: document.getElementById('enderecoCliente').value.trim(),
+        numero: document.getElementById('numeroCliente').value.trim(),
+        bairro: document.getElementById('bairroCliente').value.trim()
+    };
+    dados.clientes.push(cliente);
+    salvarDados();
+    e.target.reset();
+    mostrarMensagem();
+});
+
+function atualizarListaClientes() {
+    const lista = document.getElementById('listaClientes');
+    if(dados.clientes.length === 0) {
+        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhum cliente cadastrado ainda.</div>`;
+        return;
+    }
+    lista.innerHTML = dados.clientes.map(c => `
+        <div class="bg-white rounded-lg shadow p-3 flex items-center justify-between">
+            <div>
+                <p class="font-medium">${c.nome}</p>
+                <p class="text-xs text-gray-500">📞 ${c.fone} | 📍 ${c.endereco}, ${c.numero} - ${c.bairro}</p>
+            </div>
+            <button onclick="removerCliente(${c.id})" class="text-red-500 text-sm">Excluir</button>
+        </div>
+    `).join('');
+}
+
+function atualizarSelectClientes() {
+    const select = document.getElementById('clienteEmprestimo');
+    select.innerHTML = `<option value="">-- Escolha um cliente --</option>`;
+    dados.clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
+}
+
+function removerCliente(id) {
+    dados.clientes = dados.clientes.filter(c => c.id !== id);
+    salvarDados();
+}
+
+document.getElementById('formEmprestimo').addEventListener('submit', e => {
+    e.preventDefault();
+    const clienteId = Number(document.getElementById('clienteEmprestimo').value);
+    const valor = Number(document.getElementById('valorEmprestimo').value);
+    const juros = Number(document.getElementById('jurosEmprestimo').value);
+    const vencimento = document.getElementById('vencimentoEmprestimo').value;
+    if(!clienteId || !valor || !juros || !vencimento) return alert('Preencha todos os campos!');
+    dados.emprestimos.push({ id: Date.now(), clienteId, valor, juros, vencimento });
+    salvarDados();
+    e.target.reset();
+    mostrarTela('telaInicio');
+    alert('Empréstimo lançado com sucesso!');
+});
+
+function abrirBackup() { document.getElementById('modalBackup').classList.remove('hidden'); }
+function fecharBackup() { document.getElementById('modalBackup').classList.add('hidden'); }
+
+function baixarBackup() {
+    const blob = new Blob([JSON.stringify(dados)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `backup_emprestimos_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+}
+
+document.getElementById('arquivoRestaurar').addEventListener('change', e => {
+    const arq = e.target.files[0];
+    if(!arq) return;
+    const leitor = new FileReader();
+    leitor.onload = evt => {
+        dados = JSON.parse(evt.target.result);
+        salvarDados();
+        fecharBackup();
+        alert('Dados restaurados com sucesso!');
+    };
+    leitor.readAsText(arq);
+});
+
+function limparTudo() {
+    if(confirm('Deseja apagar TODOS os dados? Essa ação não pode ser desfeita!')) {
+        dados = { clientes: [], emprestimos: [] };
+        salvarDados();
+    }
+}
+
+function mostrarMensagem() {
+    const msg = document.getElementById('msgSucesso');
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 2500);
+}
+
+atualizarDados();
 </script>
 
 </body>
