@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Empréstimos</title>
+
+    <!-- ✅ Configuração para instalar como aplicativo -->
+    <meta name="application-name" content="Meus Empréstimos">
+    <meta name="apple-mobile-web-app-title" content="Empréstimos">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0A3A40">
+
+    <!-- ✅ ÍCONE PERSONALIZADO que você enviou -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
+    <link rel="manifest" href="manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -11,7 +24,8 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2563EB',
+                        primary: '#0A3A40',
+                        secondary: '#10B981',
                         success: '#10B981',
                         warning: '#F59E0B',
                         danger: '#EF4444',
@@ -117,7 +131,6 @@
             <div class="mb-5">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-gray-800">Empréstimos Próximos do Vencimento</h3>
-                    <a href="#" class="text-primary text-sm font-medium">Ver todos</a>
                 </div>
                 <div id="listaProximos" class="bg-white rounded-xl shadow p-4 space-y-4">
                     <div class="text-center text-gray-500 py-6">Nenhuma parcela ativa nos próximos dias.</div>
@@ -128,7 +141,6 @@
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-gray-800">Empréstimos em Atraso</h3>
-                    <a href="#" class="text-danger text-sm font-medium">Ver todos</a>
                 </div>
                 <div id="listaAtraso" class="bg-white rounded-xl shadow p-4 space-y-4">
                     <div class="text-center text-gray-500 py-6">Nenhuma parcela em atraso.</div>
@@ -604,7 +616,7 @@ function atualizarListasVencimento() {
 
         const valorFinal = (e.valorParcela || (e.valor * (1 + e.juros / 100))).toFixed(2).replace('.', ',');
         const iniciais = cliente.nome.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
-        const cor = diff < 0 ? '#EF4444' : diff <= 3 ? '#F59E0B' : '#2563EB';
+        const cor = diff < 0 ? '#EF4444' : diff <= 3 ? '#F59E0B' : '#0A3A40';
         const infoParcela = e.numeroParcela ? ` | Parcela ${e.numeroParcela}/${e.totalParcelas}` : '';
 
         const mensagem = `Olá ${cliente.nome}! Lembrando que sua parcela de R$ ${valorFinal} vence no dia ${venc.toLocaleDateString('pt-BR')}${infoParcela}. Contamos com o pagamento!`;
