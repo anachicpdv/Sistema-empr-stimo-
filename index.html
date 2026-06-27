@@ -48,7 +48,6 @@
         .btn-desfazer { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; font-weight: 500; transition: all 0.2s; cursor: pointer; margin-left: 6px; }
         .btn-desfazer:hover { background: #FEE2E2; border-color: #EF4444; }
         
-        /* ADIÇÃO DE INTERATIVIDADE */
         .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .card-hover:active { transform: scale(0.98); }
         @media (hover: hover) { .card-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); } }
@@ -247,11 +246,11 @@
             <form id="formCliente" class="space-y-4 mb-8">
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Nome Completo</label>
-                    <input type="text" id="nomeCliente" placeholder="Ex: João Silva" class="w-full border rounded-lg px-3 py-2">
+                    <input type="text" id="nomeCliente" placeholder="Ex: João Silva" class="w-full border rounded-lg px-3 py-2" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">WhatsApp (apenas números com DDD)</label>
-                    <input type="tel" id="foneCliente" placeholder="Ex: 85999999999" class="w-full border rounded-lg px-3 py-2">
+                    <input type="tel" id="foneCliente" placeholder="Ex: 85999999999" class="w-full border rounded-lg px-3 py-2" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Rua / Logradouro</label>
@@ -293,21 +292,21 @@
             <form id="formEmprestimo" class="space-y-4">
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Selecione o Cliente</label>
-                    <select id="clienteEmprestimo" class="w-full border rounded-lg px-3 py-2">
+                    <select id="clienteEmprestimo" class="w-full border rounded-lg px-3 py-2" required>
                         <option value="">-- Escolha um cliente --</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Valor Emprestado Principal (R$)</label>
-                    <input type="number" step="0.01" id="valorEmprestimo" placeholder="0,00" class="w-full border rounded-lg px-3 py-2">
+                    <input type="number" step="0.01" min="0.01" id="valorEmprestimo" placeholder="0,00" class="w-full border rounded-lg px-3 py-2" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Taxa de Juros (%)</label>
-                    <input type="number" step="0.01" id="jurosEmprestimo" placeholder="Ex: 10" class="w-full border rounded-lg px-3 py-2">
+                    <input type="number" step="0.01" min="0" id="jurosEmprestimo" placeholder="Ex: 10" class="w-full border rounded-lg px-3 py-2" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Data do Primeiro Vencimento</label>
-                    <input type="date" id="vencimentoEmprestimo" class="w-full border rounded-lg px-3 py-2">
+                    <input type="date" id="vencimentoEmprestimo" class="w-full border rounded-lg px-3 py-2" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 mb-1">Forma de Pagamento</label>
@@ -318,7 +317,7 @@
                 </div>
                 <div id="campoParcelas" class="hidden">
                     <label class="block text-sm text-gray-600 mb-1">Quantidade de Parcelas</label>
-                    <input type="number" min="2" max="36" id="qtdParcelas" placeholder="Ex: 3" class="w-full border rounded-lg px-3 py-2">
+                    <input type="number" min="2" id="qtdParcelas" placeholder="Sem limite máximo" class="w-full border rounded-lg px-3 py-2">
                     <p class="text-xs text-gray-500 mt-1">Uma parcela vence a cada 30 dias</p>
                 </div>
                 <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg mt-4">
@@ -367,7 +366,7 @@
                 </div>
                 <div id="simCampoParcelas" class="hidden">
                     <label class="block text-sm text-gray-600 mb-1">Quantidade de Parcelas</label>
-                    <input type="number" min="2" max="24" id="simQtdParcelas" placeholder="Ex: 5" class="w-full border rounded-lg px-3 py-2">
+                    <input type="number" min="2" id="simQtdParcelas" placeholder="Sem limite máximo" class="w-full border rounded-lg px-3 py-2">
                 </div>
 
                 <button type="button" onclick="calcularSimulacao()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg mt-2">
@@ -451,11 +450,27 @@ function mostrarCampoSimParcelas() {
     document.getElementById('resultadoSimulacao').classList.add('hidden');
 }
 
-let dados = JSON.parse(localStorage.getItem('dadosEmprestimos')) || { clientes: [], emprestimos: [], pagos: [] };
+// Inicialização segura dos dados
+let dados;
+try {
+    const dadosSalvos = localStorage.getItem('dadosEmprestimos');
+    dados = dadosSalvos ? JSON.parse(dadosSalvos) : null;
+} catch (e) {
+    console.warn('Dados corrompidos, iniciando novo cadastro:', e);
+    dados = null;
+}
+if (!dados || typeof dados !== 'object' || !Array.isArray(dados.clientes) || !Array.isArray(dados.emprestimos) || !Array.isArray(dados.pagos)) {
+    dados = { clientes: [], emprestimos: [], pagos: [] };
+}
 
 function salvarDados() {
-    localStorage.setItem('dadosEmprestimos', JSON.stringify(dados));
-    atualizarDados();
+    try {
+        localStorage.setItem('dadosEmprestimos', JSON.stringify(dados));
+        atualizarDados();
+    } catch (erro) {
+        mostrarMensagem('Erro ao salvar: verifique espaço no armazenamento!');
+        console.error('Erro ao salvar:', erro);
+    }
 }
 
 function somarMeses(data, meses) {
@@ -466,12 +481,13 @@ function somarMeses(data, meses) {
 
 // Backup e Restaurar
 function baixarBackup() {
-    const blob = new Blob([JSON.stringify(dados)], {type: 'application/json'});
+    const blob = new Blob([JSON.stringify(dados, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `backup_emprestimos_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
+    URL.revokeObjectURL(url);
     mostrarMensagem('Backup salvo no seu aparelho!');
 }
 
@@ -482,11 +498,14 @@ document.getElementById('inputRestaurar').addEventListener('change', e => {
     leitor.onload = evento => {
         try {
             const dadosRestaurados = JSON.parse(evento.target.result);
+            if (!dadosRestaurados.clientes || !dadosRestaurados.emprestimos || !dadosRestaurados.pagos) {
+                throw new Error('Formato inválido');
+            }
             dados = dadosRestaurados;
             salvarDados();
             mostrarMensagem('Dados restaurados com sucesso!');
         } catch {
-            mostrarMensagem('Arquivo inválido!');
+            mostrarMensagem('Arquivo de backup inválido!');
         }
     };
     leitor.readAsText(arquivo);
@@ -593,44 +612,33 @@ function enviarSimulacaoWhatsapp() {
     window.open(link, '_blank');
 }
 
-// ✅ LÓGICA CORRIGIDA DE CÁLCULOS
+// Cálculos e Atualização dos Dados
 function atualizarDados() {
     const hoje = new Date();
     hoje.setHours(0,0,0,0);
     
-    let totalEmprestado = 0;   // Soma do valor PRINCIPAL
-    let totalReceber = 0;      // Soma do valor TOTAL com juros
-    let totalPago = 0;         // Soma do que já foi pago
-    let qtdContratos = 0;      // Quantidade de contratos
-    let qtdParcelasAbertas = 0;
+    let totalEmprestado = 0;
+    let totalReceber = 0;
+    let totalPago = 0;
 
-    // Percorre empréstimos abertos
     dados.emprestimos.forEach(e => {
-        const valorPrincipal = e.valorOriginal || e.valor;
+        const valorPrincipal = e.valorOriginal || e.valor || 0;
         const valorFinal = e.valorParcela || (valorPrincipal * (1 + e.juros / 100));
-        
         totalEmprestado += valorPrincipal;
         totalReceber += valorFinal;
-        qtdParcelasAbertas++;
     });
 
-    // Percorre empréstimos pagos
     dados.pagos.forEach(p => {
-        const valorFinal = p.valorParcela || (p.valorOriginal || p.valor) * (1 + p.juros / 100);
+        const valorFinal = p.valorParcela || ((p.valorOriginal || p.valor || 0) * (1 + p.juros / 100));
         totalPago += valorFinal;
     });
 
-    // Total em aberto = o que ainda falta receber
     const totalAberto = totalReceber;
 
-    // Atualiza os valores na tela
     document.getElementById('totalEmprestado').textContent = totalEmprestado.toFixed(2).replace('.', ',');
     document.getElementById('totalReceber').textContent = totalReceber.toFixed(2).replace('.', ',');
     document.getElementById('totalAberto').textContent = totalAberto.toFixed(2).replace('.', ',');
     document.getElementById('totalPago').textContent = totalPago.toFixed(2).replace('.', ',');
-    document.getElementById('qtdContratos').textContent = [...new Set(dados.emprestimos.map(e => `${e.clienteId}-${e.valorOriginal || e.valor}-${e.juros}`))].length;
-    document.getElementById('qtdAberto').textContent = qtdParcelasAbertas;
-    document.getElementById('qtdPago').textContent = dados.pagos.length;
 
     atualizarListasVencimento();
     atualizarListaClientes();
@@ -745,7 +753,7 @@ function atualizarListaClientes() {
         <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between gap-2">
             <div class="flex-1">
                 <p class="font-medium text-gray-800">${c.nome}</p>
-                <p class="text-xs text-gray-500">📞 ${c.fone} | 📍 ${c.endereco}, ${c.numero} - ${c.bairro}</p>
+                <p class="text-xs text-gray-500">📞 ${c.fone} | 📍 ${c.endereco || ''}, ${c.numero || ''} - ${c.bairro || ''}</p>
             </div>
             <div class="flex gap-3 items-center">
                 <a href="https://wa.me/55${c.fone}" target="_blank" class="text-green-500 text-xl" title="Enviar mensagem">
@@ -825,6 +833,7 @@ function mostrarMensagem(texto) {
     setTimeout(() => msg.classList.add('hidden'), 2500);
 }
 
+// Inicialização ao carregar
 atualizarDados();
 </script>
 
