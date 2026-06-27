@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- ✅ Configuração COMPLETA para abrir como APP sem barra -->
     <title>Meus Empréstimos</title>
     <meta name="application-name" content="Sistema de Empréstimos">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +12,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#2563EB">
 
-    <!-- ✅ Link correto para o seu manifesto -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="icone-sistema.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icone-sistema.png">
@@ -49,11 +47,15 @@
         .btn-pagar:hover { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; }
         .btn-desfazer { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; font-weight: 500; transition: all 0.2s; cursor: pointer; margin-left: 6px; }
         .btn-desfazer:hover { background: #FEE2E2; border-color: #EF4444; }
+        
+        /* ADIÇÃO DE INTERATIVIDADE */
+        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:active { transform: scale(0.98); }
+        @media (hover: hover) { .card-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); } }
     </style>
 </head>
 <body class="text-gray-800">
 
-<!-- Menu Lateral -->
 <div id="menuLateral" class="menu-lateral">
     <div class="p-4 bg-primary text-white flex justify-between items-center">
         <h3 class="font-semibold text-lg">Menu Principal</h3>
@@ -89,7 +91,6 @@
 
 <div id="app">
 
-    <!-- Tela Início -->
     <div id="telaInicio" class="page">
         <header class="bg-primary text-white shadow-md">
             <div class="flex items-center justify-between px-5 py-4">
@@ -104,9 +105,8 @@
         </header>
 
         <main class="px-4 py-5">
-            <!-- Cards Resumo -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 card-hover">
                     <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mb-2">
                         <i class="fa fa-dollar text-primary text-lg"></i>
                     </div>
@@ -114,7 +114,7 @@
                     <p class="text-lg font-bold text-gray-800">R$ <span id="totalEmprestado">0,00</span></p>
                     <p class="text-xs text-gray-500 mt-1"><span id="qtdContratos">0</span> contratos</p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 card-hover">
                     <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center mb-2">
                         <i class="fa fa-dollar text-success text-lg"></i>
                     </div>
@@ -122,7 +122,7 @@
                     <p class="text-lg font-bold text-gray-800">R$ <span id="totalReceber">0,00</span></p>
                     <p class="text-xs text-gray-500 mt-1"><span id="qtdContratos2">0</span> parcelas</p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 card-hover">
                     <div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center mb-2">
                         <i class="fa fa-clock-o text-warning text-lg"></i>
                     </div>
@@ -130,7 +130,7 @@
                     <p class="text-lg font-bold text-gray-800">R$ <span id="totalAberto">0,00</span></p>
                     <p class="text-xs text-gray-500 mt-1"><span id="qtdAberto">0</span> parcelas</p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 card-hover">
                     <div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center mb-2">
                         <i class="fa fa-check-circle text-paid text-lg"></i>
                     </div>
@@ -140,7 +140,6 @@
                 </div>
             </div>
 
-            <!-- Próximos Vencimentos -->
             <div class="mb-5">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-gray-800">Empréstimos Próximos do Vencimento</h3>
@@ -151,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- Em Atraso -->
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-gray-800">Empréstimos em Atraso</h3>
@@ -162,9 +160,8 @@
                 </div>
             </div>
 
-            <!-- Menu Principal -->
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
                             <i class="fa fa-user text-primary"></i>
@@ -177,7 +174,7 @@
                     <i class="fa fa-angle-right text-gray-400"></i>
                 </button>
 
-                <button onclick="mostrarTela('telaLancar')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                <button onclick="mostrarTela('telaLancar')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
                             <i class="fa fa-money text-success"></i>
@@ -190,7 +187,7 @@
                     <i class="fa fa-angle-right text-gray-400"></i>
                 </button>
 
-                <button onclick="mostrarTela('telaSimulacao')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                <button onclick="mostrarTela('telaSimulacao')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center">
                             <i class="fa fa-calculator text-purple-500"></i>
@@ -203,7 +200,7 @@
                     <i class="fa fa-angle-right text-gray-400"></i>
                 </button>
 
-                <button onclick="mostrarTela('telaHistorico')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
+                <button onclick="mostrarTela('telaHistorico')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center">
                             <i class="fa fa-check-circle text-warning"></i>
@@ -238,7 +235,6 @@
         </nav>
     </div>
 
-    <!-- Tela Clientes -->
     <div id="telaClientes" class="page hidden pb-20">
         <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
             <button onclick="mostrarTela('telaInicio')">
@@ -285,7 +281,6 @@
         </main>
     </div>
 
-    <!-- Tela Lançar Empréstimo -->
     <div id="telaLancar" class="page hidden pb-20">
         <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
             <button onclick="mostrarTela('telaInicio')">
@@ -333,7 +328,6 @@
         </main>
     </div>
 
-    <!-- Tela de Simulação -->
     <div id="telaSimulacao" class="page hidden pb-20">
         <header class="bg-purple-50 border-b px-4 py-4 flex items-center gap-3">
             <button onclick="mostrarTela('telaInicio')">
@@ -407,7 +401,6 @@
         </main>
     </div>
 
-    <!-- Tela Histórico de Pagos -->
     <div id="telaHistorico" class="page hidden pb-20">
         <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
             <button onclick="mostrarTela('telaInicio')">
@@ -828,3 +821,4 @@ atualizarDados();
 
 </body>
 </html>
+
