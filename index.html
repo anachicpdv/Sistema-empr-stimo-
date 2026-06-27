@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- ✅ ADICIONADO: Configuração para funcionar como APP -->
+    <!-- ✅ CONFIGURAÇÃO COMPLETA PARA INSTALAR COMO APLICATIVO -->
     <title>Meus Empréstimos</title>
     <meta name="application-name" content="Meus Empréstimos">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,10 +13,25 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#2563EB">
 
-    <!-- ✅ ADICIONADO: Seu ícone personalizado -->
+    <!-- ✅ Ícone e Manifesto funcional para instalação -->
     <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="data:application/json;charset=utf-8,{
+        "name": "Meus Empréstimos",
+        "short_name": "Empréstimos",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#F8FAFC",
+        "theme_color": "#2563EB",
+        "icons": [
+            {
+                "src": "https://i.ibb.co/4Yv0j2s/icone-app.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any maskable"
+            }
+        ]
+    }">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -49,9 +64,37 @@
         .btn-pagar:hover { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; }
         .btn-desfazer { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; font-weight: 500; transition: all 0.2s; cursor: pointer; margin-left: 6px; }
         .btn-desfazer:hover { background: #FEE2E2; border-color: #EF4444; }
+
+        /* ✅ NOVO: Aviso simples para instalar como app */
+        .aviso-instalar {
+            position: fixed;
+            bottom: 90px;
+            left: 15px;
+            right: 15px;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+            border: 1px solid #e2e8f0;
+            z-index: 999;
+            display: none;
+        }
+        .aviso-instalar p { margin: 0 0 8px 0; font-size: 13px; color: #334155; }
+        .aviso-instalar button {
+            padding: 5px 10px; border-radius: 5px; border: none; font-size: 12px; font-weight: 500; cursor: pointer;
+        }
+        .btn-add { background: #2563EB; color: white; margin-right: 8px; }
+        .btn-later { background: #f1f5f9; color: #475569; }
     </style>
 </head>
 <body class="text-gray-800">
+
+<!-- ✅ NOVO: Aviso de instalação -->
+<div id="avisoAddTela" class="aviso-instalar">
+    <p>📱 Adicione este aplicativo na tela inicial para acessar mais rápido!</p>
+    <button id="botaoInstalar" class="btn-add">Adicionar agora</button>
+    <button onclick="fecharAvisoInstalar()" class="btn-later">Depois</button>
+</div>
 
 <!-- Menu Lateral -->
 <div id="menuLateral" class="menu-lateral">
@@ -432,6 +475,28 @@
 </div>
 
 <script>
+// ✅ NOVA FUNÇÃO: Instalação como Aplicativo
+let promptInstalacao;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    promptInstalacao = e;
+    document.getElementById('avisoAddTela').style.display = 'block';
+});
+
+document.getElementById('botaoInstalar').addEventListener('click', async () => {
+    if (promptInstalacao) {
+        promptInstalacao.prompt();
+        const { outcome } = await promptInstalacao.userChoice;
+        promptInstalacao = null;
+    }
+    fecharAvisoInstalar();
+    mostrarMensagem('Adicionado à tela inicial!');
+});
+
+function fecharAvisoInstalar() {
+    document.getElementById('avisoAddTela').style.display = 'none';
+}
+
 // Controle do Menu Lateral
 function abrirMenu() {
     document.getElementById('menuLateral').classList.add('aberto');
@@ -762,73 +827,4 @@ function atualizarListaClientes() {
 
 function atualizarSelectClientes() {
     const select = document.getElementById('clienteEmprestimo');
-    select.innerHTML = `<option value="">-- Escolha um cliente --</option>`;
-    dados.clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
-}
-
-function removerCliente(id) {
-    dados.clientes = dados.clientes.filter(c => c.id !== id);
-    dados.emprestimos = dados.emprestimos.filter(e => e.clienteId !== id);
-    dados.pagos = dados.pagos.filter(e => e.clienteId !== id);
-    salvarDados();
-    mostrarMensagem('Cliente removido!');
-}
-
-document.getElementById('formEmprestimo').addEventListener('submit', e => {
-    e.preventDefault();
-    const clienteId = Number(document.getElementById('clienteEmprestimo').value);
-    const valor = Number(document.getElementById('valorEmprestimo').value);
-    const juros = Number(document.getElementById('jurosEmprestimo').value);
-    const vencimento = document.getElementById('vencimentoEmprestimo').value;
-    const forma = document.getElementById('pagamentoEmprestimo').value;
-
-    if(!clienteId || !valor || !juros || !vencimento) return alert('Preencha todos os campos!');
-
-    if (forma === 'unico') {
-        dados.emprestimos.push({
-            id: Date.now(),
-            clienteId,
-            valor,
-            juros,
-            vencimento,
-            forma: 'unico'
-        });
-    } else {
-        const qtd = Number(document.getElementById('qtdParcelas').value);
-        if (!qtd || qtd < 2) return alert('Informe a quantidade de parcelas (mínimo 2)!');
-        const valorTotal = valor * (1 + juros / 100);
-        const valorParcela = valorTotal / qtd;
-        for (let i = 0; i < qtd; i++) {
-            dados.emprestimos.push({
-                id: Date.now() + i,
-                clienteId,
-                valorOriginal: valor,
-                valorParcela: valorParcela,
-                juros,
-                vencimento: somarMeses(vencimento, i),
-                forma: 'parcelado',
-                numeroParcela: i + 1,
-                totalParcelas: qtd
-            });
-        }
-    }
-
-    salvarDados();
-    e.target.reset();
-    mostrarOpcaoParcelas();
-    mostrarTela('telaInicio');
-    mostrarMensagem('Empréstimo lançado com sucesso!');
-});
-
-function mostrarMensagem(texto) {
-    const msg = document.getElementById('msgSucesso');
-    msg.textContent = texto;
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('hidden'), 2500);
-}
-
-atualizarDados();
-</script>
-
-</body>
-</html>
+    select.innerHTML = `<option value="">-- Escolha
