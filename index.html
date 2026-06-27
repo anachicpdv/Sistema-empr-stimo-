@@ -9,8 +9,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Empréstimos">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="theme-color" content="#2563EB">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1E40AF">
 
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="icone-sistema.png">
@@ -23,66 +23,65 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2563EB',
+                        primary: '#1E40AF',
+                        primaryLight: '#3B82F6',
                         success: '#10B981',
                         warning: '#F59E0B',
                         danger: '#EF4444',
-                        lightBg: '#F8FAFC',
-                        paid: '#8B5CF6',
+                        slateBg: '#F8FAFC',
                     },
-                    fontFamily: { sans: ['Arial', 'sans-serif'] }
+                    fontFamily: { sans: ['Inter', 'Arial', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        body { min-height: 100vh; overflow-x: hidden; padding-bottom: 85px; background: #F8FAFC; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { min-height: 100vh; overflow-x: hidden; padding-bottom: 90px; background: #F8FAFC; font-family: 'Inter', sans-serif; }
         .page { min-height: 100vh; }
-        .initial-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px; }
-        .menu-lateral { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 100; transition: left 0.3s ease; }
+        .initial-circle { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; font-size: 15px; }
+        .menu-lateral { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background: white; box-shadow: 4px 0 20px rgba(0,0,0,0.05); z-index: 100; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .menu-lateral.aberto { left: 0; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; display: none; }
+        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(2px); z-index: 99; display: none; }
         .overlay.ativo { display: block; }
-        .btn-pagar { font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 1px solid #D1D5DB; background: #F9FAFB; color: #374151; font-weight: 500; transition: all 0.2s; cursor: pointer; }
-        .btn-pagar:hover { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; }
-        .btn-desfazer { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; font-weight: 500; transition: all 0.2s; cursor: pointer; margin-left: 6px; }
-        .btn-desfazer:hover { background: #FEE2E2; border-color: #EF4444; }
         
-        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .card-hover:active { transform: scale(0.98); }
-        @media (hover: hover) { .card-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); } }
+        /* Botão estilizado premium de pagamento */
+        .btn-pagar-clean { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: #EFF6FF; color: #1E40AF; font-weight: 600; transition: all 0.2s; cursor: pointer; }
+        .btn-pagar-clean:hover { background: #1E40AF; color: white; }
+        .btn-desfazer { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: #FEF2F2; color: #DC2626; font-weight: 600; transition: all 0.2s; cursor: pointer; }
+        .btn-desfazer:hover { background: #DC2626; color: white; }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="text-slate-800">
 
 <div id="menuLateral" class="menu-lateral">
-    <div class="p-4 bg-primary text-white flex justify-between items-center">
-        <h3 class="font-semibold text-lg">Menu Principal</h3>
-        <button onclick="fecharMenu()" class="text-xl">&times;</button>
+    <div class="p-5 bg-primary text-white flex justify-between items-center">
+        <h3 class="font-bold text-lg tracking-tight">Menu Principal</h3>
+        <button onclick="fecharMenu()" class="text-2xl opacity-80 hover:opacity-100">&times;</button>
     </div>
-    <div class="p-4 space-y-2 mt-2">
-        <button onclick="baixarBackup()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
-            <i class="fa fa-download text-gray-600"></i> Fazer Backup
+    <div class="p-4 space-y-1 mt-2">
+        <button onclick="baixarBackup()" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors">
+            <i class="fa fa-download text-slate-400 w-5 text-center"></i> Fazer Backup
         </button>
-        <label class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3 cursor-pointer">
-            <i class="fa fa-upload text-gray-600"></i> Restaurar Backup
+        <label class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors cursor-pointer">
+            <i class="fa fa-upload text-slate-400 w-5 text-center"></i> Restaurar Backup
             <input type="file" id="inputRestaurar" class="hidden" accept=".json">
         </label>
-        <hr class="my-3">
-        <button onclick="mostrarTela('telaInicio'); fecharMenu()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
-            <i class="fa fa-home text-gray-600"></i> Início
+        <hr class="my-3 border-slate-100">
+        <button onclick="mostrarTela('telaInicio'); fecharMenu()" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors">
+            <i class="fa fa-home text-slate-400 w-5 text-center"></i> Início
         </button>
-        <button onclick="mostrarTela('telaClientes'); fecharMenu()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
-            <i class="fa fa-users text-gray-600"></i> Clientes
+        <button onclick="mostrarTela('telaClientes'); fecharMenu()" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors">
+            <i class="fa fa-users text-slate-400 w-5 text-center"></i> Clientes
         </button>
-        <button onclick="mostrarTela('telaLancar'); fecharMenu()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
-            <i class="fa fa-money text-gray-600"></i> Novo Empréstimo
+        <button onclick="mostrarTela('telaLancar'); fecharMenu()" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors">
+            <i class="fa fa-money text-slate-400 w-5 text-center"></i> Novo Empréstimo
         </button>
-        <button onclick="mostrarTela('telaSimulacao'); fecharMenu()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
-            <i class="fa fa-calculator text-gray-600"></i> Simulação
+        <button onclick="mostrarTela('telaSimulacao'); fecharMenu()" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors">
+            <i class="fa fa-calculator text-slate-400 w-5 text-center"></i> Simulação
         </button>
-        <button onclick="mostrarTela('telaHistorico'); fecharMenu()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
-            <i class="fa fa-check-circle text-gray-600"></i> Histórico de Pagos
+        <button onclick="mostrarTela('telaHistorico'); fecharMenu()" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-50 flex items-center gap-3 text-slate-600 font-medium transition-colors">
+            <i class="fa fa-check-circle text-slate-400 w-5 text-center"></i> Histórico de Pagos
         </button>
     </div>
 </div>
@@ -91,339 +90,239 @@
 <div id="app">
 
     <div id="telaInicio" class="page">
-        <header class="bg-primary text-white shadow-md">
+        <header class="bg-primary text-white shadow-sm sticky top-0 z-20">
             <div class="flex items-center justify-between px-5 py-4">
-                <button onclick="abrirMenu()" class="text-xl">
+                <button onclick="abrirMenu()" class="text-xl p-1 opacity-90 hover:opacity-100">
                     <i class="fa fa-bars"></i>
                 </button>
-                <h1 class="text-lg font-semibold">Meus Empréstimos</h1>
-                <button onclick="mostrarTela('telaLancar')" class="text-xl">
+                <h1 class="text-md font-bold tracking-tight uppercase">Gestão de Crédito</h1>
+                <button onclick="mostrarTela('telaLancar')" class="text-xl p-1 opacity-90 hover:opacity-100">
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
         </header>
 
-        <main class="px-4 py-5">
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                <div class="bg-white rounded-xl shadow p-4 card-hover">
-                    <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-                        <i class="fa fa-dollar text-primary text-lg"></i>
-                    </div>
-                    <p class="text-sm text-gray-500">Total Emprestado</p>
-                    <p class="text-lg font-bold text-gray-800">R$ <span id="totalEmprestado">0,00</span></p>
-                    <p class="text-xs text-gray-500 mt-1">Valor principal</p>
+        <main class="px-4 py-5 max-w-4xl mx-auto space-y-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Principal</p>
+                    <p class="text-xl font-bold text-slate-800 mt-1">R$ <span id="totalEmprestado">0,00</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4 card-hover">
-                    <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center mb-2">
-                        <i class="fa fa-dollar text-success text-lg"></i>
-                    </div>
-                    <p class="text-sm text-gray-500">Total a Receber</p>
-                    <p class="text-lg font-bold text-gray-800">R$ <span id="totalReceber">0,00</span></p>
-                    <p class="text-xs text-gray-500 mt-1">Valor total com juros</p>
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">A Receber</p>
+                    <p class="text-xl font-bold text-slate-800 mt-1">R$ <span id="totalReceber">0,00</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4 card-hover">
-                    <div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center mb-2">
-                        <i class="fa fa-clock-o text-warning text-lg"></i>
-                    </div>
-                    <p class="text-sm text-gray-500">Em Aberto</p>
-                    <p class="text-lg font-bold text-gray-800">R$ <span id="totalAberto">0,00</span></p>
-                    <p class="text-xs text-gray-500 mt-1">Restante a receber</p>
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Em Aberto</p>
+                    <p class="text-xl font-bold text-warning mt-1">R$ <span id="totalAberto">0,00</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4 card-hover">
-                    <div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center mb-2">
-                        <i class="fa fa-check-circle text-paid text-lg"></i>
-                    </div>
-                    <p class="text-sm text-gray-500">Total Pago</p>
-                    <p class="text-lg font-bold text-gray-800">R$ <span id="totalPago">0,00</span></p>
-                    <p class="text-xs text-gray-500 mt-1">Já recebido</p>
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Recebido</p>
+                    <p class="text-xl font-bold text-success mt-1">R$ <span id="totalPago">0,00</span></p>
                 </div>
             </div>
 
-            <div class="mb-5">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-gray-800">Empréstimos Próximos do Vencimento</h3>
-                    <a href="#" class="text-primary text-sm font-medium">Ver todos</a>
+            <div>
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <h3 class="font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                         📌 Próximos Vencimentos
+                    </h3>
                 </div>
-                <div id="listaProximos" class="bg-white rounded-xl shadow p-4 space-y-4">
-                    <div class="text-center text-gray-500 py-6">Nenhuma parcela ativa nos próximos dias.</div>
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-gray-800">Empréstimos em Atraso</h3>
-                    <a href="#" class="text-danger text-sm font-medium">Ver todos</a>
-                </div>
-                <div id="listaAtraso" class="bg-white rounded-xl shadow p-4 space-y-4">
-                    <div class="text-center text-gray-500 py-6">Nenhuma parcela em atraso.</div>
+                <div id="listaProximos" class="space-y-4">
+                    <div class="text-center text-slate-400 bg-white rounded-2xl border border-dashed py-8">Nenhuma parcela ativa.</div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i class="fa fa-user text-primary"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-800">Clientes</p>
-                            <p class="text-xs text-gray-500">Ver e gerenciar</p>
-                        </div>
-                    </div>
-                    <i class="fa fa-angle-right text-gray-400"></i>
-                </button>
-
-                <button onclick="mostrarTela('telaLancar')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
-                            <i class="fa fa-money text-success"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-800">Novo Empréstimo</p>
-                            <p class="text-xs text-gray-500">Cadastrar oficial</p>
-                        </div>
-                    </div>
-                    <i class="fa fa-angle-right text-gray-400"></i>
-                </button>
-
-                <button onclick="mostrarTela('telaSimulacao')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center">
-                            <i class="fa fa-calculator text-purple-500"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-800">Simulação</p>
-                            <p class="text-xs text-gray-500">Calcular e enviar</p>
-                        </div>
-                    </div>
-                    <i class="fa fa-angle-right text-gray-400"></i>
-                </button>
-
-                <button onclick="mostrarTela('telaHistorico')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left card-hover">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center">
-                            <i class="fa fa-check-circle text-warning"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-800">Histórico</p>
-                            <p class="text-xs text-gray-500">Empréstimos pagos</p>
-                        </div>
-                    </div>
-                    <i class="fa fa-angle-right text-gray-400"></i>
-                </button>
+            <div>
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <h3 class="font-bold text-danger tracking-tight flex items-center gap-2">
+                         ⚠️ Carteira em Atraso
+                    </h3>
+                </div>
+                <div id="listaAtraso" class="space-y-4">
+                    <div class="text-center text-slate-400 bg-white rounded-2xl border border-dashed py-8">Excelente! Nenhuma pendência em atraso.</div>
+                </div>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t flex justify-around py-3 z-30">
-            <button onclick="mostrarTela('telaInicio')" class="text-center text-primary">
-                <i class="fa fa-home text-xl"></i>
-                <p class="text-xs mt-1">Início</p>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 flex justify-around py-2.5 z-30 shadow-lg max-w-4xl mx-auto rounded-t-2xl">
+            <button onclick="mostrarTela('telaInicio')" class="text-center text-primary flex flex-col items-center gap-1">
+                <i class="fa fa-home text-lg"></i>
+                <span class="text-[10px] font-bold tracking-wide uppercase">Painel</span>
             </button>
-            <button onclick="mostrarTela('telaClientes')" class="text-center text-gray-500">
-                <i class="fa fa-users text-xl"></i>
-                <p class="text-xs mt-1">Clientes</p>
+            <button onclick="mostrarTela('telaClientes')" class="text-center text-slate-400 flex flex-col items-center gap-1 hover:text-slate-600">
+                <i class="fa fa-users text-lg"></i>
+                <span class="text-[10px] font-bold tracking-wide uppercase">Clientes</span>
             </button>
-            <button onclick="mostrarTela('telaLancar')" class="text-center text-gray-500">
-                <i class="fa fa-money text-xl"></i>
-                <p class="text-xs mt-1">Empréstimos</p>
+            <button onclick="mostrarTela('telaLancar')" class="text-center text-slate-400 flex flex-col items-center gap-1 hover:text-slate-600">
+                <i class="fa fa-money text-lg"></i>
+                <span class="text-[10px] font-bold tracking-wide uppercase">Lançar</span>
             </button>
-            <button onclick="mostrarTela('telaSimulacao')" class="text-center text-gray-500">
-                <i class="fa fa-calculator text-xl"></i>
-                <p class="text-xs mt-1">Simular</p>
+            <button onclick="mostrarTela('telaSimulacao')" class="text-center text-slate-400 flex flex-col items-center gap-1 hover:text-slate-600">
+                <i class="fa fa-calculator text-lg"></i>
+                <span class="text-[10px] font-bold tracking-wide uppercase">Simular</span>
             </button>
         </nav>
     </div>
 
     <div id="telaClientes" class="page hidden pb-20">
-        <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
-            <button onclick="mostrarTela('telaInicio')">
-                <i class="fa fa-arrow-left text-gray-700"></i>
-            </button>
-            <h2 class="text-lg font-semibold">Cadastrar Novo Cliente</h2>
+        <header class="bg-white border-b border-slate-100 px-5 py-4 flex items-center gap-4 sticky top-0 z-20">
+            <button onclick="mostrarTela('telaInicio')" class="p-1 text-slate-600"><i class="fa fa-arrow-left"></i></button>
+            <h2 class="text-md font-bold text-slate-800 uppercase tracking-tight">Cadastro de Clientes</h2>
         </header>
-
-        <main class="px-4 py-5">
-            <form id="formCliente" class="space-y-4 mb-8">
+        <main class="px-4 py-5 max-w-lg mx-auto space-y-6">
+            <form id="formCliente" class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm space-y-4">
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Nome Completo</label>
-                    <input type="text" id="nomeCliente" placeholder="Ex: João Silva" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nome Completo</label>
+                    <input type="text" id="nomeCliente" placeholder="Ex: João Silva" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium" required>
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">WhatsApp (apenas números com DDD)</label>
-                    <input type="tel" id="foneCliente" placeholder="Ex: 85999999999" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">WhatsApp (com DDD)</label>
+                    <input type="tel" id="foneCliente" placeholder="Ex: 85999999999" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium" required>
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Rua / Logradouro</label>
-                    <input type="text" id="enderecoCliente" placeholder="Ex: Av. Santos Dumont" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Endereço / Logradouro</label>
+                    <input type="text" id="enderecoCliente" placeholder="Ex: Av. Santos Dumont" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Número</label>
-                        <input type="text" id="numeroCliente" placeholder="123" class="w-full border rounded-lg px-3 py-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Número</label>
+                        <input type="text" id="numeroCliente" placeholder="123" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                     </div>
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Bairro</label>
-                        <input type="text" id="bairroCliente" placeholder="Ex: Aldeota" class="w-full border rounded-lg px-3 py-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Bairro</label>
+                        <input type="text" id="bairroCliente" placeholder="Ex: Aldeota" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-success hover:bg-success/90 text-white font-semibold py-3 rounded-lg">
-                    Adicionar Cliente
+                <button type="submit" class="w-full bg-success text-white font-bold py-3 rounded-xl shadow-sm hover:opacity-95 transition-opacity text-sm uppercase tracking-wide">
+                    Salvar Novo Cliente
                 </button>
             </form>
 
-            <h3 class="font-semibold mb-3">Clientes Cadastrados</h3>
-            <div id="listaClientes" class="space-y-3">
-                <div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-                    Nenhum cliente cadastrado ainda.
-                </div>
-            </div>
+            <h3 class="font-bold text-slate-800 px-1">Clientes Cadastrados</h3>
+            <div id="listaClientes" class="space-y-2"></div>
         </main>
     </div>
 
     <div id="telaLancar" class="page hidden pb-20">
-        <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
-            <button onclick="mostrarTela('telaInicio')">
-                <i class="fa fa-arrow-left text-gray-700"></i>
-            </button>
-            <h2 class="text-lg font-semibold">Lançar Empréstimo</h2>
+        <header class="bg-white border-b border-slate-100 px-5 py-4 flex items-center gap-4 sticky top-0 z-20">
+            <button onclick="mostrarTela('telaInicio')" class="p-1 text-slate-600"><i class="fa fa-arrow-left"></i></button>
+            <h2 class="text-md font-bold text-slate-800 uppercase tracking-tight">Novo Empréstimo</h2>
         </header>
-
-        <main class="px-4 py-5">
-            <form id="formEmprestimo" class="space-y-4">
+        <main class="px-4 py-5 max-w-lg mx-auto/90">
+            <form id="formEmprestimo" class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm space-y-4">
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Selecione o Cliente</label>
-                    <select id="clienteEmprestimo" class="w-full border rounded-lg px-3 py-2" required>
-                        <option value="">-- Escolha um cliente --</option>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Selecionar Beneficiário</label>
+                    <select id="clienteEmprestimo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium h-11" required>
+                        <option value="">-- Escolha o cliente --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Valor Emprestado Principal (R$)</label>
-                    <input type="number" step="0.01" min="0.01" id="valorEmprestimo" placeholder="0,00" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Valor Principal (R$)</label>
+                    <input type="number" step="0.01" min="0.01" id="valorEmprestimo" placeholder="0,00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium" required>
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Taxa de Juros (%)</label>
-                    <input type="number" step="0.01" min="0" id="jurosEmprestimo" placeholder="Ex: 10" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Taxa de Juros (%)</label>
+                    <input type="number" step="0.01" min="0" id="jurosEmprestimo" placeholder="Ex: 10" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium" required>
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Data do Primeiro Vencimento</label>
-                    <input type="date" id="vencimentoEmprestimo" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Primeira Data de Vencimento</label>
+                    <input type="date" id="vencimentoEmprestimo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium" required>
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Forma de Pagamento</label>
-                    <select id="pagamentoEmprestimo" class="w-full border rounded-lg px-3 py-2" onchange="mostrarOpcaoParcelas()">
-                        <option value="unico">Quitação Integral no Vencimento</option>
-                        <option value="parcelado">Parcelado mensalmente</option>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Modalidade</label>
+                    <select id="pagamentoEmprestimo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium h-11" onchange="mostrarOpcaoParcelas()">
+                        <option value="unico">Parcela Única (Quitação Integral)</option>
+                        <option value="parcelado">Mensal Parcelado</option>
                     </select>
                 </div>
                 <div id="campoParcelas" class="hidden">
-                    <label class="block text-sm text-gray-600 mb-1">Quantidade de Parcelas</label>
-                    <input type="number" min="2" id="qtdParcelas" placeholder="Sem limite máximo" class="w-full border rounded-lg px-3 py-2">
-                    <p class="text-xs text-gray-500 mt-1">Uma parcela vence a cada 30 dias</p>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Total de Parcelas</label>
+                    <input type="number" min="2" id="qtdParcelas" placeholder="Ex: 4" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
-                <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg mt-4">
-                    Confirmar e Lançar
+                <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-sm hover:opacity-95 transition-opacity text-sm uppercase tracking-wide mt-2">
+                    Efetivar Empréstimo
                 </button>
             </form>
         </main>
     </div>
 
     <div id="telaSimulacao" class="page hidden pb-20">
-        <header class="bg-purple-50 border-b px-4 py-4 flex items-center gap-3">
-            <button onclick="mostrarTela('telaInicio')">
-                <i class="fa fa-arrow-left text-gray-700"></i>
-            </button>
-            <h2 class="text-lg font-semibold">Simulação de Empréstimo</h2>
+        <header class="bg-white border-b border-slate-100 px-5 py-4 flex items-center gap-4 sticky top-0 z-20">
+            <button onclick="mostrarTela('telaInicio')" class="p-1 text-slate-600"><i class="fa fa-arrow-left"></i></button>
+            <h2 class="text-md font-bold text-slate-800 uppercase tracking-tight">Simulador Flex</h2>
         </header>
-
-        <main class="px-4 py-5">
-            <form id="formSimulacao" class="space-y-4">
+        <main class="px-4 py-5 max-w-lg mx-auto space-y-4">
+            <form id="formSimulacao" class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm space-y-4">
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Nome do Cliente</label>
-                    <input type="text" id="simNome" placeholder="Ex: Maria Santos" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nome do Lead</label>
+                    <input type="text" id="simNome" placeholder="Ex: Maria Santos" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">WhatsApp (com DDD)</label>
-                    <input type="tel" id="simFone" placeholder="Ex: 85999999999" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">WhatsApp</label>
+                    <input type="tel" id="simFone" placeholder="Ex: 85999999999" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Valor Solicitado Principal (R$)</label>
-                    <input type="number" step="0.01" id="simValor" placeholder="0,00" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Capital Pretendido (R$)</label>
+                    <input type="number" step="0.01" id="simValor" placeholder="0,00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Taxa de Juros (%)</label>
-                    <input type="number" step="0.01" id="simJuros" placeholder="Ex: 8" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Taxa de Juros (%)</label>
+                    <input type="number" step="0.01" id="simJuros" placeholder="Ex: 8" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Data do Primeiro Vencimento</label>
-                    <input type="date" id="simVencimento" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Primeiro Vencimento</label>
+                    <input type="date" id="simVencimento" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm text-gray-600 mb-1">Forma de Pagamento</label>
-                    <select id="simForma" class="w-full border rounded-lg px-3 py-2" onchange="mostrarCampoSimParcelas()">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Formato</label>
+                    <select id="simForma" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium h-11" onchange="mostrarCampoSimParcelas()">
                         <option value="unico">Pagamento Único</option>
                         <option value="parcelado">Parcelado</option>
                     </select>
                 </div>
                 <div id="simCampoParcelas" class="hidden">
-                    <label class="block text-sm text-gray-600 mb-1">Quantidade de Parcelas</label>
-                    <input type="number" min="2" id="simQtdParcelas" placeholder="Sem limite máximo" class="w-full border rounded-lg px-3 py-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Qtd de Parcelas</label>
+                    <input type="number" min="2" id="simQtdParcelas" placeholder="Ex: 3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary text-sm font-medium">
                 </div>
-
-                <button type="button" onclick="calcularSimulacao()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg mt-2">
-                    🧮 Calcular Simulação
+                <button type="button" onclick="calcularSimulacao()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-sm uppercase tracking-wide shadow-sm hover:opacity-95 transition-opacity">
+                    Simular Proposta
                 </button>
             </form>
 
-            <div id="resultadoSimulacao" class="mt-6 hidden bg-purple-50 border border-purple-200 rounded-xl p-4 space-y-3">
-                <h3 class="font-semibold text-purple-800 text-center">📋 Resultado da Simulação</h3>
-                <div class="grid grid-cols-2 gap-2 text-sm">
-                    <span class="text-gray-600">Valor principal:</span>
-                    <span class="font-medium text-right">R$ <span id="resValor"></span></span>
-
-                    <span class="text-gray-600">Juros (%):</span>
-                    <span class="font-medium text-right"><span id="resJuros"></span>%</span>
-
-                    <span class="text-gray-600">Valor total a pagar:</span>
-                    <span class="font-bold text-purple-700 text-right">R$ <span id="resTotal"></span></span>
-
-                    <span class="text-gray-600">Forma de pagamento:</span>
-                    <span class="font-medium text-right"><span id="resForma"></span></span>
-
-                    <span id="labelParcela" class="text-gray-600 hidden">Valor da parcela:</span>
-                    <span id="valorParcela" class="font-medium text-right hidden"></span>
+            <div id="resultadoSimulacao" class="hidden bg-emerald-50/60 border border-emerald-100 rounded-2xl p-5 space-y-4">
+                <h3 class="font-bold text-emerald-800 text-sm uppercase tracking-wider text-center">📋 Demonstrativo da Proposta</h3>
+                <div class="space-y-2 text-sm text-slate-600">
+                    <div class="flex justify-between border-b border-emerald-100/50 pb-1"><span>Principal:</span><span class="font-semibold text-slate-800">R$ <span id="resValor"></span></span></div>
+                    <div class="flex justify-between border-b border-emerald-100/50 pb-1"><span>Juros Aplicados:</span><span class="font-semibold text-slate-800"><span id="resJuros"></span>%</span></div>
+                    <div class="flex justify-between border-b border-emerald-100/50 pb-1"><span>Montante Final:</span><span class="font-bold text-emerald-700">R$ <span id="resTotal"></span></span></div>
+                    <div class="flex justify-between border-b border-emerald-100/50 pb-1"><span>Forma Envio:</span><span class="font-semibold text-slate-800"><span id="resForma"></span></span></div>
+                    <div id="boxSimParcela" class="flex justify-between hidden"><span>Valor da Parcela:</span><span id="valorParcela" class="font-bold text-slate-800"></span></div>
                 </div>
-
-                <button type="button" onclick="enviarSimulacaoWhatsapp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg mt-3">
-                    📤 Enviar por WhatsApp
+                <button type="button" onclick="enviarSimulacaoWhatsapp()" class="w-full bg-success text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-sm text-sm">
+                    <i class="fa fa-whatsapp text-lg"></i> Enviar Proposta Oficial
                 </button>
             </div>
         </main>
     </div>
 
     <div id="telaHistorico" class="page hidden pb-20">
-        <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
-            <button onclick="mostrarTela('telaInicio')">
-                <i class="fa fa-arrow-left text-gray-700"></i>
-            </button>
-            <h2 class="text-lg font-semibold">Empréstimos Pagos</h2>
+        <header class="bg-white border-b border-slate-100 px-5 py-4 flex items-center gap-4 sticky top-0 z-20">
+            <button onclick="mostrarTela('telaInicio')" class="p-1 text-slate-600"><i class="fa fa-arrow-left"></i></button>
+            <h2 class="text-md font-bold text-slate-800 uppercase tracking-tight">Histórico de Recebidos</h2>
         </header>
-        <main class="px-4 py-5">
-            <div id="listaPagos" class="space-y-4">
-                <div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-                    Nenhuma parcela paga ainda.
-                </div>
-            </div>
+        <main class="px-4 py-5 max-w-lg mx-auto">
+            <div id="listaPagos" class="space-y-3"></div>
         </main>
     </div>
 
-    <div id="msgSucesso" class="fixed bottom-24 left-4 right-4 bg-green-500 text-white p-3 rounded-lg shadow-lg text-center z-40 hidden">
-        ✅ Operação realizada com sucesso!
+    <div id="msgSucesso" class="fixed bottom-24 left-6 right-6 md:left-auto md:right-6 md:max-w-sm bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold tracking-wide text-center z-50 hidden border border-slate-800">
+        Operação executada com sucesso.
     </div>
 
 </div>
 
 <script>
-// Controle do Menu Lateral
 function abrirMenu() {
     document.getElementById('menuLateral').classList.add('aberto');
     document.getElementById('overlay').classList.add('ativo');
@@ -432,10 +331,16 @@ function fecharMenu() {
     document.getElementById('menuLateral').classList.remove('aberto');
     document.getElementById('overlay').classList.remove('ativo');
 }
-
 function mostrarTela(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
+    
+    // Altera classe ativa do menu inferior de forma visualmente profissional
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.replace('text-primary', 'text-slate-400'));
+    const mappedButtons = { 'telaInicio': 0, 'telaClientes': 1, 'telaLancar': 2, 'telaSimulacao': 3 };
+    if(mappedButtons[id] !== undefined) {
+        document.querySelectorAll('nav button')[mappedButtons[id]].classList.replace('text-slate-400', 'text-primary');
+    }
     atualizarDados();
 }
 
@@ -450,96 +355,77 @@ function mostrarCampoSimParcelas() {
     document.getElementById('resultadoSimulacao').classList.add('hidden');
 }
 
-// Inicialização segura dos dados
-let dados;
+let dados = { clientes: [], emprestimos: [], pagos: [] };
 try {
-    const dadosSalvos = localStorage.getItem('dadosEmprestimos');
-    dados = dadosSalvos ? JSON.parse(dadosSalvos) : null;
-} catch (e) {
-    console.warn('Dados corrompidos, iniciando novo cadastro:', e);
-    dados = null;
-}
-if (!dados || typeof dados !== 'object' || !Array.isArray(dados.clientes) || !Array.isArray(dados.emprestimos) || !Array.isArray(dados.pagos)) {
-    dados = { clientes: [], emprestimos: [], pagos: [] };
-}
+    const salvos = localStorage.getItem('dadosEmprestimos');
+    if(salvos) {
+        const parsed = JSON.parse(salvos);
+        if(parsed && Array.isArray(parsed.clientes)) dados = parsed;
+    }
+} catch (e) { console.error(e); }
 
 function salvarDados() {
-    try {
-        localStorage.setItem('dadosEmprestimos', JSON.stringify(dados));
-        atualizarDados();
-    } catch (erro) {
-        mostrarMensagem('Erro ao salvar: verifique espaço no armazenamento!');
-        console.error('Erro ao salvar:', erro);
-    }
+    localStorage.setItem('dadosEmprestimos', JSON.stringify(dados));
+    atualizarDados();
 }
 
 function somarMeses(data, meses) {
-    const novaData = new Date(data);
-    novaData.setMonth(novaData.getMonth() + meses);
-    return novaData.toISOString().split('T')[0];
+    const d = new Date(data + 'T00:00:00');
+    d.setMonth(d.getMonth() + meses);
+    return d.toISOString().split('T')[0];
 }
 
-// Backup e Restaurar
 function baixarBackup() {
     const blob = new Blob([JSON.stringify(dados, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `backup_emprestimos_${new Date().toISOString().slice(0,10)}.json`;
+    a.href = URL.createObjectURL(blob);
+    a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
-    URL.revokeObjectURL(url);
-    mostrarMensagem('Backup salvo no seu aparelho!');
+    mostrarMensagem('Backup exportado com sucesso.');
 }
 
 document.getElementById('inputRestaurar').addEventListener('change', e => {
-    const arquivo = e.target.files[0];
-    if (!arquivo) return;
-    const leitor = new FileReader();
-    leitor.onload = evento => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
         try {
-            const dadosRestaurados = JSON.parse(evento.target.result);
-            if (!dadosRestaurados.clientes || !dadosRestaurados.emprestimos || !dadosRestaurados.pagos) {
-                throw new Error('Formato inválido');
+            const res = JSON.parse(evt.target.result);
+            if(res.clientes && res.emprestimos) {
+                dados = res;
+                salvarDados();
+                mostrarMensagem('Backup restaurado com sucesso.');
             }
-            dados = dadosRestaurados;
-            salvarDados();
-            mostrarMensagem('Dados restaurados com sucesso!');
-        } catch {
-            mostrarMensagem('Arquivo de backup inválido!');
-        }
+        } catch { mostrarMensagem('Arquivo inválido.'); }
     };
-    leitor.readAsText(arquivo);
+    reader.readAsText(file);
 });
 
-// Marcar como Pago
 function marcarComoPago(id) {
-    if (!confirm('Deseja confirmar o pagamento desta parcela?')) return;
-    const index = dados.emprestimos.findIndex(e => e.id === id);
-    if (index !== -1) {
-        const parcela = dados.emprestimos.splice(index, 1)[0];
-        parcela.dataPagamento = new Date().toLocaleDateString('pt-BR');
-        dados.pagos.push(parcela);
+    if (!confirm('Confirmar a liquidação desta parcela?')) return;
+    const idx = dados.emprestimos.findIndex(e => e.id === id);
+    if (idx !== -1) {
+        const p = dados.emprestimos.splice(idx, 1)[0];
+        p.dataPagamento = new Date().toLocaleDateString('pt-BR');
+        dados.pagos.push(p);
         salvarDados();
-        mostrarMensagem('Parcela marcada como paga!');
+        mostrarMensagem('Parcela liquidada.');
     }
 }
 
-// Desfazer Pagamento
 function desfazerPagamento(id) {
-    if (!confirm('Deseja desfazer este pagamento? A parcela voltará para a lista de abertos.')) return;
-    const index = dados.pagos.findIndex(p => p.id === id);
-    if (index !== -1) {
-        const parcela = dados.pagos.splice(index, 1)[0];
-        delete parcela.dataPagamento;
-        dados.emprestimos.push(parcela);
+    if (!confirm('Desfazer este pagamento?')) return;
+    const idx = dados.pagos.findIndex(p => p.id === id);
+    if (idx !== -1) {
+        const p = dados.pagos.splice(idx, 1)[0];
+        delete p.dataPagamento;
+        dados.emprestimos.push(p);
         salvarDados();
-        mostrarMensagem('Pagamento desfeito! Parcela voltou ao controle.');
+        mostrarMensagem('Pagamento estornado.');
     }
 }
 
-// Funções da Simulação
 let simulacaoAtual = {};
-
 function calcularSimulacao() {
     const nome = document.getElementById('simNome').value.trim();
     const fone = document.getElementById('simFone').value.trim();
@@ -547,283 +433,210 @@ function calcularSimulacao() {
     const juros = Number(document.getElementById('simJuros').value);
     const vencimento = document.getElementById('simVencimento').value;
     const forma = document.getElementById('simForma').value;
-    const qtdParcelas = Number(document.getElementById('simQtdParcelas').value);
+    const qtd = Number(document.getElementById('simQtdParcelas').value);
 
-    if (!nome || !fone || !valor || !juros || !vencimento) {
-        alert('Preencha todos os campos obrigatórios!');
-        return;
-    }
-    if (forma === 'parcelado' && (!qtdParcelas || qtdParcelas < 2)) {
-        alert('Informe a quantidade de parcelas (mínimo 2)!');
-        return;
-    }
+    if (!nome || !fone || !valor || !juros || !vencimento) return alert('Preencha os campos da simulação!');
+    
+    const total = valor * (1 + juros / 100);
+    let vParc = 0;
+    if(forma === 'parcelado') vParc = total / qtd;
 
-    const valorTotal = valor * (1 + juros / 100);
-    let valorParcela = 0;
-    let descricaoForma = '';
-
-    if (forma === 'unico') {
-        descricaoForma = 'Pagamento Único';
-    } else {
-        valorParcela = valorTotal / qtdParcelas;
-        descricaoForma = `${qtdParcelas}x de R$ ${valorParcela.toFixed(2).replace('.', ',')}`;
-    }
-
-    simulacaoAtual = { nome, fone, valor, juros, valorTotal, valorParcela, forma, qtdParcelas, vencimento };
+    simulacaoAtual = { nome, fone, valor, juros, total, vParc, forma, qtd, vencimento };
 
     document.getElementById('resValor').textContent = valor.toFixed(2).replace('.', ',');
     document.getElementById('resJuros').textContent = juros.toFixed(2).replace('.', ',');
-    document.getElementById('resTotal').textContent = valorTotal.toFixed(2).replace('.', ',');
-    document.getElementById('resForma').textContent = descricaoForma;
+    document.getElementById('resTotal').textContent = total.toFixed(2).replace('.', ',');
+    document.getElementById('resForma').textContent = forma === 'unico' ? 'Única' : `${qtd}x`;
 
-    if (forma === 'parcelado') {
-        document.getElementById('labelParcela').classList.remove('hidden');
-        document.getElementById('valorParcela').classList.remove('hidden');
-        document.getElementById('valorParcela').textContent = `R$ ${valorParcela.toFixed(2).replace('.', ',')}`;
+    const bParc = document.getElementById('boxSimParcela');
+    const vParcText = document.getElementById('valorParcela');
+    if(forma === 'parcelado') {
+        bParc.classList.remove('hidden');
+        vParcText.textContent = `R$ ${vParc.toFixed(2).replace('.', ',')}`;
     } else {
-        document.getElementById('labelParcela').classList.add('hidden');
-        document.getElementById('valorParcela').classList.add('hidden');
+        bParc.classList.add('hidden');
     }
-
     document.getElementById('resultadoSimulacao').classList.remove('hidden');
 }
 
 function enviarSimulacaoWhatsapp() {
     const s = simulacaoAtual;
-    if (!s.nome) return;
-
-    let mensagem = `Olá ${s.nome}! Tudo bem?\n\nSegue a simulação do seu empréstimo:\n\n`;
-    mensagem += `• Valor principal: R$ ${s.valor.toFixed(2).replace('.', ',')}\n`;
-    mensagem += `• Taxa de juros: ${s.juros.toFixed(2).replace('.', ',')}%\n`;
-    mensagem += `• Valor total a pagar: R$ ${s.valorTotal.toFixed(2).replace('.', ',')}\n`;
-
-    if (s.forma === 'unico') {
-        mensagem += `• Forma de pagamento: Único\n`;
-        mensagem += `• Vencimento: ${new Date(s.vencimento).toLocaleDateString('pt-BR')}\n`;
-    } else {
-        mensagem += `• Forma de pagamento: ${s.qtdParcelas} parcelas mensais\n`;
-        mensagem += `• Valor de cada parcela: R$ ${s.valorParcela.toFixed(2).replace('.', ',')}\n`;
-        mensagem += `• Primeiro vencimento: ${new Date(s.vencimento).toLocaleDateString('pt-BR')}\n`;
-    }
-
-    mensagem += `\nFicou interessado? É só me avisar! 😊`;
-
-    const link = `https://wa.me/55${s.fone}?text=${encodeURIComponent(mensagem)}`;
-    window.open(link, '_blank');
+    let msg = `Olá *${s.nome}*, demonstrativo da sua proposta:\n\n`;
+    msg += `• *Capital:* R$ ${s.valor.toFixed(2).replace('.', ',')}\n`;
+    msg += `• *Taxa:* ${s.juros}%\n`;
+    msg += `• *Montante:* R$ ${s.total.toFixed(2).replace('.', ',')}\n`;
+    if(s.forma === 'parcelado') msg += `• *Condição:* ${s.qtd}x de R$ ${s.vParc.toFixed(2).replace('.', ',')}\n`;
+    msg += `• *1º Vencimento:* ${new Date(s.vencimento + 'T00:00:00').toLocaleDateString('pt-BR')}`;
+    window.open(`https://wa.me/55${s.fone}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// Cálculos e Atualização dos Dados
 function atualizarDados() {
-    let totalEmprestado = 0;
-    let totalReceber = 0;
-    let totalPago = 0;
-
+    let tEmp = 0, tRec = 0, tPag = 0;
     dados.emprestimos.forEach(e => {
-        const valorPrincipal = e.valorOriginal || e.valor || 0;
-        const valorFinal = e.valorParcela || (valorPrincipal * (1 + e.juros / 100));
-        totalEmprestado += valorPrincipal;
-        totalReceber += valorFinal;
+        const vP = e.valorOriginal || e.valor || 0;
+        const vF = e.valorParcela || (vP * (1 + e.juros / 100));
+        tEmp += vP; tRec += vF;
     });
-
     dados.pagos.forEach(p => {
-        const valorFinal = p.valorParcela || ((p.valorOriginal || p.valor || 0) * (1 + p.juros / 100));
-        totalPago += valorFinal;
+        tPag += p.valorParcela || ((p.valorOriginal || p.valor || 0) * (1 + p.juros / 100));
     });
 
-    document.getElementById('totalEmprestado').textContent = totalEmprestado.toFixed(2).replace('.', ',');
-    document.getElementById('totalReceber').textContent = totalReceber.toFixed(2).replace('.', ',');
-    document.getElementById('totalAberto').textContent = totalReceber.toFixed(2).replace('.', ',');
-    document.getElementById('totalPago').textContent = totalPago.toFixed(2).replace('.', ',');
+    document.getElementById('totalEmprestado').textContent = tEmp.toFixed(2).replace('.', ',');
+    document.getElementById('totalReceber').textContent = tRec.toFixed(2).replace('.', ',');
+    document.getElementById('totalAberto').textContent = tRec.toFixed(2).replace('.', ',');
+    document.getElementById('totalPago').textContent = tPag.toFixed(2).replace('.', ',');
 
-    atualizarListasVencimento();
-    atualizarListaClientes();
-    atualizarSelectClientes();
-    atualizarHistoricoPagos();
+    renderizarCardsAgrupados();
+    renderListaClientes();
+    renderSelectClientes();
+    renderHistorico();
 }
 
-function atualizarListasVencimento() {
-    const hoje = new Date();
-    hoje.setHours(0,0,0,0);
+function renderizarCardsAgrupados() {
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    dados.emprestimos.sort((a,b) => new Date(a.vencimento) - new Date(b.vencimento));
 
-    // 1. Organiza por data cronológica geral primeiro
-    dados.emprestimos.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-
-    // 2. Agrupa os empréstimos ativos/atrasados por ID do cliente
-    const agrupadoProximos = {};
-    const agrupadoAtraso = {};
+    const agProximos = {}, agAtraso = {};
 
     dados.emprestimos.forEach(e => {
-        const venc = new Date(e.vencimento);
-        venc.setHours(0,0,0,0);
-        const diff = Math.ceil((venc - hoje) / (1000*60*60*24));
-        const cliente = dados.clientes.find(c => c.id === e.clienteId);
-        if (!cliente) return;
+        const vD = new Date(e.vencimento + 'T00:00:00');
+        const diff = Math.ceil((vD - hoje) / (1000*60*60*24));
+        const c = dados.clientes.find(cl => cl.id === e.clienteId);
+        if(!c) return;
 
-        const alvo = diff < 0 ? agrupadoAtraso : agrupadoProximos;
-
-        if (!alvo[e.clienteId]) {
-            alvo[e.clienteId] = {
-                cliente: cliente,
-                parcelas: [],
-                menorDiff: diff,
-                proximoVencimento: venc
-            };
-        }
-        alvo[e.clienteId].parcelas.push({ ...e, diff, valorFormatado: (e.valorParcela || (e.valor * (1 + e.juros / 100))).toFixed(2).replace('.', ',') });
+        const alvo = diff < 0 ? agAtraso : agProximos;
+        if(!alvo[e.clienteId]) alvo[e.clienteId] = { cliente: c, parcelas: [] };
+        
+        alvo[e.clienteId].parcelas.push({ ...e, diff });
     });
 
-    // 3. Renderiza os blocos unificados por cliente
-    document.getElementById('listaProximos').innerHTML = construirHtmlAgrupado(agrupadoProximos, 'proximos');
-    document.getElementById('listaAtraso').innerHTML = construirHtmlAgrupado(agrupadoAtraso, 'atraso');
+    document.getElementById('listaProximos').innerHTML = gerarHtmlAgrupado(agProximos, 'proximos');
+    document.getElementById('listaAtraso').innerHTML = gerarHtmlAgrupado(agAtraso, 'atraso');
 }
 
-function construirHtmlAgrupado(agrupamento, tipo) {
+function gerarHtmlAgrupado(agrupamento, tipo) {
     const chaves = Object.keys(agrupamento);
-    if (!chaves.length) {
-        return `<div class="text-center text-gray-500 py-6">${tipo === 'atraso' ? 'Nenhuma parcela em atraso.' : 'Nenhuma parcela ativa nos próximos dias.'}</div>`;
-    }
+    if(!chaves.length) return `<div class="text-center text-slate-400 bg-white border border-slate-100 rounded-2xl py-8 text-sm">${tipo === 'atraso' ? 'Excelente! Nenhuma pendência em atraso.' : 'Nenhuma parcela ativa para os próximos dias.'}</div>`;
 
     return chaves.map(id => {
         const bloco = agrupamento[id];
         const c = bloco.cliente;
         const iniciais = c.nome.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
-        
-        // Cor baseada na situação geral mais crítica do cliente
-        const cor = bloco.menorDiff < 0 ? '#EF4444' : bloco.menorDiff <= 3 ? '#F59E0B' : '#2563EB';
+        const corBg = tipo === 'atraso' ? 'bg-rose-500' : 'bg-blue-600';
 
-        // Criação de texto unificado para o WhatsApp contendo todas as parcelas pendentes
-        let textoParcelasWpp = bloco.parcelas.map(p => {
-            const txtParc = p.numeroParcela ? ` (Parc. ${p.numeroParcela}/${p.totalParcelas})` : '';
-            return `• R$ ${p.valorFormatado} - Venc: ${new Date(p.vencimento).toLocaleDateString('pt-BR')}${txtParc}`;
-        }).join('\n');
-        
-        const msgWpp = `Olá ${c.nome}! Tudo bem?\n\nPassando para lembrar das suas parcelas em aberto:\n${textoParcelasWpp}\n\nContamos com o seu pagamento! 😊`;
-        const linkWpp = `https://wa.me/55${c.fone}?text=${encodeURIComponent(msgWpp)}`;
+        // Linhas de parcelas simplificadas em tabela compacta profissional
+        const linhasParcelas = bloco.parcelas.map(p => {
+            const labelSelo = p.numeroParcela ? `${p.numeroParcela}/${p.totalParcelas}` : 'Única';
+            const vF = (p.valorParcela || (p.valor * (1 + p.juros / 100))).toFixed(2).replace('.', ',');
+            const txtDias = p.diff < 0 ? `Atrasado ${-p.diff}d` : p.diff === 0 ? 'Vence hoje' : `Em ${p.diff} dias`;
+            const corDias = p.diff < 0 ? 'text-rose-500 font-semibold' : p.diff === 0 ? 'text-amber-500 font-semibold' : 'text-slate-400';
 
-        // Gerar linhas internas para cada parcela individual dentro do mesmo cliente
-        const htmlParcelas = bloco.parcelas.map(p => {
-            const labelSelo = p.numeroParcela ? `Parc. ${p.numeroParcela}/${p.totalParcelas}` : 'Única';
             return `
-            <div class="flex items-center justify-between bg-gray-50/70 p-2.5 rounded-lg border border-gray-100">
-                <div class="min-w-0">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="bg-blue-50 text-blue-600 text-[11px] px-1.5 py-0.5 rounded font-semibold border border-blue-100">${labelSelo}</span>
-                        <span class="text-xs font-medium text-gray-500">Venc: ${new Date(p.vencimento).toLocaleDateString('pt-BR')}</span>
+            <div class="flex items-center justify-between py-2 border-b border-slate-50 last:border-none text-xs">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold text-[11px] tracking-tight">${labelSelo}</span>
+                    <div class="truncate">
+                        <span class="text-slate-700 font-medium">${new Date(p.vencimento + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                        <span class="mx-1 text-slate-300">•</span>
+                        <span class="${corDias}">${txtDias}</span>
                     </div>
-                    <p class="text-[11px] font-semibold ${p.diff < 0 ? 'text-danger' : p.diff === 0 ? 'text-warning' : 'text-primary'}">
-                        ${p.diff < 0 ? `Atrasado ${-p.diff}d` : p.diff === 0 ? 'Vence hoje' : p.diff === 1 ? 'Amanhã' : `Em ${p.diff} dias`}
-                    </p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="font-bold text-gray-800 text-sm">R$ ${p.valorFormatado}</span>
-                    <button onclick="marcarComoPago(${p.id})" class="btn-pagar bg-white shadow-sm hover:bg-blue-50">
-                        Pagar
-                    </button>
+                    <span class="font-bold text-slate-800">R$ ${vF}</span>
+                    <button onclick="marcarComoPago(${p.id})" class="btn-pagar-clean">Pagar</button>
                 </div>
             </div>`;
         }).join('');
 
+        // Link único de cobrança do WhatsApp
+        let txtWp = `Olá ${c.nome}, lembrete de pendências:\n`;
+        bloco.parcelas.forEach(p => {
+            const vf = (p.valorParcela || (p.valor * (1 + p.juros / 100))).toFixed(2).replace('.', ',');
+            txtWp += `• Parcela ${p.numeroParcela || 'Única'}: R$ ${vf} - Venc: ${new Date(p.vencimento + 'T00:00:00').toLocaleDateString('pt-BR')}\n`;
+        });
+        const link = `https://wa.me/55${c.fone}?text=${encodeURIComponent(txtWp)}`;
+
         return `
-        <div class="border border-gray-100 rounded-xl p-3 bg-white shadow-sm mb-4 last:mb-0">
-            <!-- Cabeçalho Único do Cliente -->
-            <div class="flex items-center justify-between gap-2 border-b border-gray-100 pb-2.5 mb-3">
-                <div class="flex items-center gap-3 min-w-0">
-                    <div class="initial-circle flex-shrink-0" style="background:${cor}">${iniciais}</div>
-                    <div class="truncate">
-                        <span class="font-bold text-gray-800 text-base capitalize block truncate">${c.nome}</span>
-                        <p class="text-xs text-gray-400">Total de pendências: ${bloco.parcelas.length}</p>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
+                <div class="flex items-center gap-3">
+                    <div class="initial-circle ${corBg}">${iniciais}</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm capitalize">${c.nome}</h4>
+                        <p class="text-xs text-slate-400 font-medium">Contratos ativos: ${bloco.parcelas.length}</p>
                     </div>
                 </div>
-                <a href="${linkWpp}" target="_blank" class="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-green-600 hover:bg-green-100 transition-colors flex-shrink-0" title="Cobrar todas via WhatsApp">
-                    <i class="fa fa-whatsapp text-xl"></i>
+                <a href="${link}" target="_blank" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-100 transition-colors">
+                    <i class="fa fa-whatsapp text-lg"></i>
                 </a>
             </div>
-            <!-- Sublista de parcelas agrupadas -->
-            <div class="space-y-2">
-                ${htmlParcelas}
+            <div class="divide-y divide-slate-50">
+                ${linhasParcelas}
             </div>
         </div>`;
     }).join('');
 }
 
-function atualizarHistoricoPagos() {
-    const lista = document.getElementById('listaPagos');
-    if (dados.pagos.length === 0) {
-        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhuma parcela paga ainda.</div>`;
-        return;
-    }
-    lista.innerHTML = dados.pagos.map(e => {
-        const cliente = dados.clientes.find(c => c.id === e.clienteId) || { nome: 'Cliente excluído' };
-        const valorFinal = (e.valorParcela || (e.valor * (1 + e.juros / 100))).toFixed(2).replace('.', ',');
-        const infoParcela = e.numeroParcela ? ` | Parcela ${e.numeroParcela}/${e.totalParcelas}` : '';
-        return `
-        <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between flex-wrap gap-2">
+function renderListaClientes() {
+    const l = document.getElementById('listaClientes');
+    if(!dados.clientes.length) { l.innerHTML = ''; return; }
+    l.innerHTML = dados.clientes.map(c => `
+        <div class="bg-white rounded-xl border border-slate-100 p-3 flex items-center justify-between text-xs shadow-sm">
             <div>
-                <p class="font-medium text-gray-800">${cliente.nome}${infoParcela}</p>
-                <p class="text-xs text-gray-500">Vencimento: ${new Date(e.vencimento).toLocaleDateString('pt-BR')}</p>
-                <p class="text-xs text-success">Pago em: ${e.dataPagamento}</p>
+                <p class="font-bold text-slate-800 text-sm">${c.nome}</p>
+                <p class="text-slate-400 mt-0.5">📞 ${c.fone} ${c.bairro ? `| 📍 ${c.bairro}` : ''}</p>
             </div>
-            <div class="text-right">
-                <p class="font-semibold text-success">R$ ${valorFinal}</p>
-                <button onclick="desfazerPagamento(${e.id})" class="btn-desfazer mt-1">
-                    Desfazer
-                </button>
+            <button onclick="removerCliente(${c.id})" class="text-rose-500 font-semibold px-2 py-1">Excluir</button>
+        </div>
+    `).join('');
+}
+
+function renderSelectClientes() {
+    const s = document.getElementById('clienteEmprestimo');
+    s.innerHTML = `<option value="">-- Escolha o cliente --</option>`;
+    dados.clientes.forEach(c => s.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
+}
+
+function renderHistorico() {
+    const h = document.getElementById('listaPagos');
+    if(!dados.pagos.length) { h.innerHTML = `<div class="text-center text-slate-400 py-8 text-sm">Nenhum pagamento registrado.</div>`; return; }
+    h.innerHTML = dados.pagos.map(p => {
+        const c = dados.clientes.find(cl => cl.id === p.clienteId) || { nome: 'Removido' };
+        const v = (p.valorParcela || (p.valor * (1 + p.juros / 100))).toFixed(2).replace('.', ',');
+        return `
+        <div class="bg-white rounded-xl border border-slate-100 p-3.5 flex items-center justify-between text-xs shadow-sm">
+            <div>
+                <p class="font-bold text-slate-800 text-sm">${c.nome} ${p.numeroParcela ? `(Parc. ${p.numeroParcela})` : ''}</p>
+                <p class="text-emerald-600 font-medium mt-0.5">Recebido em: ${p.dataPagamento}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="font-bold text-emerald-600 text-sm">R$ ${v}</span>
+                <button onclick="desfazerPagamento(${p.id})" class="btn-desfazer">Estornar</button>
             </div>
         </div>`;
     }).join('');
+}
+
+function removerCliente(id) {
+    if(!confirm('Excluir cliente e todo o histórico vinculado?')) return;
+    dados.clientes = dados.clientes.filter(c => c.id !== id);
+    dados.emprestimos = dados.emprestimos.filter(e => e.clienteId !== id);
+    dados.pagos = dados.pagos.filter(p => p.clienteId !== id);
+    salvarDados();
 }
 
 document.getElementById('formCliente').addEventListener('submit', e => {
     e.preventDefault();
-    const cliente = {
+    dados.clientes.push({
         id: Date.now(),
         nome: document.getElementById('nomeCliente').value.trim(),
         fone: document.getElementById('foneCliente').value.trim(),
         endereco: document.getElementById('enderecoCliente').value.trim(),
         numero: document.getElementById('numeroCliente').value.trim(),
         bairro: document.getElementById('bairroCliente').value.trim()
-    };
-    dados.clientes.push(cliente);
-    salvarDados();
-    e.target.reset();
-    mostrarMensagem('Cliente cadastrado com sucesso!');
+    });
+    salvarDados(); e.target.reset(); mostrarMensagem('Cliente cadastrado.');
 });
-
-function atualizarListaClientes() {
-    const lista = document.getElementById('listaClientes');
-    if(dados.clientes.length === 0) {
-        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhum cliente cadastrado ainda.</div>`;
-        return;
-    }
-    lista.innerHTML = dados.clientes.map(c => `
-        <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between gap-2">
-            <div class="flex-1">
-                <p class="font-medium text-gray-800">${c.nome}</p>
-                <p class="text-xs text-gray-500">📞 ${c.fone} | 📍 ${c.endereco || ''}, ${c.numero || ''} - ${c.bairro || ''}</p>
-            </div>
-            <div class="flex gap-3 items-center">
-                <a href="https://wa.me/55${c.fone}" target="_blank" class="text-green-500 text-xl" title="Enviar mensagem">
-                    <i class="fa fa-whatsapp"></i>
-                </a>
-                <button onclick="removerCliente(${c.id})" class="text-red-500 text-sm font-medium">Excluir</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-function atualizarSelectClientes() {
-    const select = document.getElementById('clienteEmprestimo');
-    select.innerHTML = `<option value="">-- Escolha um cliente --</option>`;
-    dados.clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
-}
-
-function removerCliente(id) {
-    dados.clientes = dados.clientes.filter(c => c.id !== id);
-    dados.emprestimos = dados.emprestimos.filter(e => e.clienteId !== id);
-    dados.pagos = dados.pagos.filter(e => e.clienteId !== id);
-    salvarDados();
-    mostrarMensagem('Cliente removido!');
-}
 
 document.getElementById('formEmprestimo').addEventListener('submit', e => {
     e.preventDefault();
@@ -833,55 +646,35 @@ document.getElementById('formEmprestimo').addEventListener('submit', e => {
     const vencimento = document.getElementById('vencimentoEmprestimo').value;
     const forma = document.getElementById('pagamentoEmprestimo').value;
 
-    if(!clienteId || !valor || !juros || !vencimento) return alert('Preencha todos os campos!');
-
-    if (forma === 'unico') {
-        dados.emprestimos.push({
-            id: Date.now(),
-            clienteId,
-            valorOriginal: valor,
-            valor,
-            juros,
-            vencimento,
-            forma: 'unico'
-        });
+    if(forma === 'unico') {
+        dados.emprestimos.push({ id: Date.now(), clienteId, valorOriginal: valor, valor, juros, vencimento, forma });
     } else {
         const qtd = Number(document.getElementById('qtdParcelas').value);
-        if (!qtd || qtd < 2) return alert('Informe a quantidade de parcelas (mínimo 2)!');
-        const valorTotal = valor * (1 + juros / 100);
-        const valorParcela = valorTotal / qtd;
-        for (let i = 0; i < qtd; i++) {
+        const total = valor * (1 + juros / 100);
+        const valorParcela = total / qtd;
+        for(let i=0; i<qtd; i++) {
             dados.emprestimos.push({
                 id: Date.now() + i,
                 clienteId,
                 valorOriginal: valor,
-                valorParcela: valorParcela,
+                valorParcela,
                 juros,
                 vencimento: somarMeses(vencimento, i),
-                forma: 'parcelado',
-                numeroParcela: i + 1,
+                forma,
+                numeroParcela: i+1,
                 totalParcelas: qtd
             });
         }
     }
-
-    salvarDados();
-    e.target.reset();
-    mostrarOpcaoParcelas();
-    mostrarTela('telaInicio');
-    mostrarMensagem('Empréstimo lançado com sucesso!');
+    salvarDados(); e.target.reset(); mostrarOpcaoParcelas(); mostrarTela('telaInicio'); mostrarMensagem('Empréstimo registrado.');
 });
 
-function mostrarMensagem(texto) {
-    const msg = document.getElementById('msgSucesso');
-    msg.textContent = texto;
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('hidden'), 2500);
+function mostrarMensagem(t) {
+    const m = document.getElementById('msgSucesso'); m.textContent = t;
+    m.classList.remove('hidden'); setTimeout(() => m.classList.add('hidden'), 2000);
 }
 
-// Inicialização ao carregar
 atualizarDados();
 </script>
-
 </body>
 </html>
