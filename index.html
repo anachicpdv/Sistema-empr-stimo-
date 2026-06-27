@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- ✅ ADICIONADO: Configuração para funcionar como APP -->
+    <!-- ✅ Configuração para funcionar como APP -->
     <title>Meus Empréstimos</title>
     <meta name="application-name" content="Meus Empréstimos">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#2563EB">
 
-    <!-- ✅ ADICIONADO: Seu ícone personalizado -->
+    <!-- ✅ Ícone personalizado -->
     <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
     <link rel="manifest" href="manifest.json">
@@ -104,7 +104,7 @@
         </header>
 
         <main class="px-4 py-5">
-            <!-- ✅ Cards Resumo com Total Pago -->
+            <!-- Cards Resumo -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <div class="bg-white rounded-xl shadow p-4">
                     <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mb-2">
@@ -162,7 +162,7 @@
                 </div>
             </div>
 
-            <!-- ✅ MENU PRINCIPAL COM BOTÃO ADICIONADO -->
+            <!-- ✅ MENU PRINCIPAL - BOTÃO ADICIONADO AQUI -->
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
                     <div class="flex items-center gap-3">
@@ -177,15 +177,15 @@
                     <i class="fa fa-angle-right text-gray-400"></i>
                 </button>
 
-                <!-- ✅ NOVO BOTÃO ADICIONADO -->
+                <!-- 🟢 NOVO BOTÃO ADICIONADO -->
                 <button onclick="mostrarTela('telaLancar')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
-                            <i class="fa fa-plus text-success"></i>
+                            <i class="fa fa-money text-success"></i>
                         </div>
                         <div>
-                            <p class="font-medium text-gray-800">Adicionar Empréstimo</p>
-                            <p class="text-xs text-gray-500">Cadastrar novo</p>
+                            <p class="font-medium text-gray-800">Novo Empréstimo</p>
+                            <p class="text-xs text-gray-500">Cadastrar oficial</p>
                         </div>
                     </div>
                     <i class="fa fa-angle-right text-gray-400"></i>
@@ -239,6 +239,7 @@
         </nav>
     </div>
 
+    <!-- RESTO DO CÓDIGO 100% ORIGINAL ABAIXO -->
     <!-- Tela Clientes -->
     <div id="telaClientes" class="page hidden pb-20">
         <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
@@ -382,7 +383,6 @@
                 </button>
             </form>
 
-            <!-- Resultado da Simulação -->
             <div id="resultadoSimulacao" class="mt-6 hidden bg-purple-50 border border-purple-200 rounded-xl p-4 space-y-3">
                 <h3 class="font-semibold text-purple-800 text-center">📋 Resultado da Simulação</h3>
                 <div class="grid grid-cols-2 gap-2 text-sm">
@@ -501,7 +501,7 @@ document.getElementById('inputRestaurar').addEventListener('change', e => {
     leitor.readAsText(arquivo);
 });
 
-// ✅ Marcar como Pago
+// Marcar como Pago
 function marcarComoPago(id) {
     if (!confirm('Deseja confirmar o pagamento desta parcela?')) return;
     const index = dados.emprestimos.findIndex(e => e.id === id);
@@ -514,7 +514,7 @@ function marcarComoPago(id) {
     }
 }
 
-// ✅ Nova função: DESFAZER PAGAMENTO
+// Desfazer Pagamento
 function desfazerPagamento(id) {
     if (!confirm('Deseja desfazer este pagamento? A parcela voltará para a lista de abertos.')) return;
     const index = dados.pagos.findIndex(p => p.id === id);
@@ -561,7 +561,6 @@ function calcularSimulacao() {
 
     simulacaoAtual = { nome, fone, valor, juros, valorTotal, valorParcela, forma, qtdParcelas, vencimento };
 
-    // Preencher resultado
     document.getElementById('resValor').textContent = valor.toFixed(2).replace('.', ',');
     document.getElementById('resJuros').textContent = juros.toFixed(2).replace('.', ',');
     document.getElementById('resTotal').textContent = valorTotal.toFixed(2).replace('.', ',');
@@ -603,7 +602,7 @@ function enviarSimulacaoWhatsapp() {
     window.open(link, '_blank');
 }
 
-// ✅ Atualização completa com Total Pago
+// Atualização de Dados
 function atualizarDados() {
     const hoje = new Date();
     hoje.setHours(0,0,0,0);
@@ -640,7 +639,6 @@ function atualizarDados() {
     atualizarHistoricoPagos();
 }
 
-// ✅ Botão refeito: Marcar como Pago
 function atualizarListasVencimento() {
     const hoje = new Date();
     hoje.setHours(0,0,0,0);
@@ -695,7 +693,6 @@ function atualizarListasVencimento() {
     document.getElementById('listaAtraso').innerHTML = atraso.length ? atraso.join('') : `<div class="text-center text-gray-500 py-6">Nenhuma parcela em atraso.</div>`;
 }
 
-// ✅ Histórico com botão DESFAZER
 function atualizarHistoricoPagos() {
     const lista = document.getElementById('listaPagos');
     if (dados.pagos.length === 0) {
