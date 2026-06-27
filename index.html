@@ -14,7 +14,7 @@
 
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="icone-sistema.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icone-sistema.png">
+    <link class="apple-touch-icon" sizes="180x180" href="icone-sistema.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -43,7 +43,7 @@
         .menu-lateral.aberto { left: 0; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; display: none; }
         .overlay.ativo { display: block; }
-        .btn-pagar { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #D1D5DB; background: #F9FAFB; color: #374151; font-weight: 500; transition: all 0.2s; cursor: pointer; }
+        .btn-pagar { font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 1px solid #D1D5DB; background: #F9FAFB; color: #374151; font-weight: 500; transition: all 0.2s; cursor: pointer; }
         .btn-pagar:hover { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; }
         .btn-desfazer { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; font-weight: 500; transition: all 0.2s; cursor: pointer; margin-left: 6px; }
         .btn-desfazer:hover { background: #FEE2E2; border-color: #EF4444; }
@@ -614,9 +614,6 @@ function enviarSimulacaoWhatsapp() {
 
 // Cálculos e Atualização dos Dados
 function atualizarDados() {
-    const hoje = new Date();
-    hoje.setHours(0,0,0,0);
-    
     let totalEmprestado = 0;
     let totalReceber = 0;
     let totalPago = 0;
@@ -633,11 +630,9 @@ function atualizarDados() {
         totalPago += valorFinal;
     });
 
-    const totalAberto = totalReceber;
-
     document.getElementById('totalEmprestado').textContent = totalEmprestado.toFixed(2).replace('.', ',');
     document.getElementById('totalReceber').textContent = totalReceber.toFixed(2).replace('.', ',');
-    document.getElementById('totalAberto').textContent = totalAberto.toFixed(2).replace('.', ',');
+    document.getElementById('totalAberto').textContent = totalReceber.toFixed(2).replace('.', ',');
     document.getElementById('totalPago').textContent = totalPago.toFixed(2).replace('.', ',');
 
     atualizarListasVencimento();
@@ -649,11 +644,13 @@ function atualizarDados() {
 function atualizarListasVencimento() {
     const hoje = new Date();
     hoje.setHours(0,0,0,0);
-    const proximos = [];
-    const atraso = [];
 
-    // Organiza as parcelas por ordem cronológica automática antes de renderizar
+    // 1. Organiza por data cronológica geral primeiro
     dados.emprestimos.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+
+    // 2. Agrupa os empréstimos ativos/atrasados por ID do cliente
+    const agrupadoProximos = {};
+    const agrupadoAtraso = {};
 
     dados.emprestimos.forEach(e => {
         const venc = new Date(e.vencimento);
@@ -662,50 +659,91 @@ function atualizarListasVencimento() {
         const cliente = dados.clientes.find(c => c.id === e.clienteId);
         if (!cliente) return;
 
-        const valorFinal = (e.valorParcela || (e.valor * (1 + e.juros / 100))).toFixed(2).replace('.', ',');
-        const iniciais = cliente.nome.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
-        const cor = diff < 0 ? '#EF4444' : diff <= 3 ? '#F59E0B' : '#2563EB';
-        const infoParcela = e.numeroParcela ? ` | Parcela ${e.numeroParcela}/${e.totalParcelas}` : '';
+        const alvo = diff < 0 ? agrupadoAtraso : agrupadoProximos;
 
-        const mensagem = `Olá ${cliente.nome}! Lembrando que sua parcela de R$ ${valorFinal} vence no dia ${venc.toLocaleDateString('pt-BR')}${infoParcela}. Contamos com o pagamento!`;
-        const linkWpp = `https://wa.me/55${cliente.fone}?text=${encodeURIComponent(mensagem)}`;
+        if (!alvo[e.clienteId]) {
+            alvo[e.clienteId] = {
+                cliente: cliente,
+                parcelas: [],
+                menorDiff: diff,
+                proximoVencimento: venc
+            };
+        }
+        alvo[e.clienteId].parcelas.push({ ...e, diff, valorFormatado: (e.valorParcela || (e.valor * (1 + e.juros / 100))).toFixed(2).replace('.', ',') });
+    });
 
-        const item = `
-        <div class="border-b border-gray-100 last:border-none py-3 first:pt-1 last:pb-1">
-            <div class="flex items-center justify-between gap-2 mb-2">
+    // 3. Renderiza os blocos unificados por cliente
+    document.getElementById('listaProximos').innerHTML = construirHtmlAgrupado(agrupadoProximos, 'proximos');
+    document.getElementById('listaAtraso').innerHTML = construirHtmlAgrupado(agrupadoAtraso, 'atraso');
+}
+
+function construirHtmlAgrupado(agrupamento, tipo) {
+    const chaves = Object.keys(agrupamento);
+    if (!chaves.length) {
+        return `<div class="text-center text-gray-500 py-6">${tipo === 'atraso' ? 'Nenhuma parcela em atraso.' : 'Nenhuma parcela ativa nos próximos dias.'}</div>`;
+    }
+
+    return chaves.map(id => {
+        const bloco = agrupamento[id];
+        const c = bloco.cliente;
+        const iniciais = c.nome.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
+        
+        // Cor baseada na situação geral mais crítica do cliente
+        const cor = bloco.menorDiff < 0 ? '#EF4444' : bloco.menorDiff <= 3 ? '#F59E0B' : '#2563EB';
+
+        // Criação de texto unificado para o WhatsApp contendo todas as parcelas pendentes
+        let textoParcelasWpp = bloco.parcelas.map(p => {
+            const txtParc = p.numeroParcela ? ` (Parc. ${p.numeroParcela}/${p.totalParcelas})` : '';
+            return `• R$ ${p.valorFormatado} - Venc: ${new Date(p.vencimento).toLocaleDateString('pt-BR')}${txtParc}`;
+        }).join('\n');
+        
+        const msgWpp = `Olá ${c.nome}! Tudo bem?\n\nPassando para lembrar das suas parcelas em aberto:\n${textoParcelasWpp}\n\nContamos com o seu pagamento! 😊`;
+        const linkWpp = `https://wa.me/55${c.fone}?text=${encodeURIComponent(msgWpp)}`;
+
+        // Gerar linhas internas para cada parcela individual dentro do mesmo cliente
+        const htmlParcelas = bloco.parcelas.map(p => {
+            const labelSelo = p.numeroParcela ? `Parc. ${p.numeroParcela}/${p.totalParcelas}` : 'Única';
+            return `
+            <div class="flex items-center justify-between bg-gray-50/70 p-2.5 rounded-lg border border-gray-100">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="bg-blue-50 text-blue-600 text-[11px] px-1.5 py-0.5 rounded font-semibold border border-blue-100">${labelSelo}</span>
+                        <span class="text-xs font-medium text-gray-500">Venc: ${new Date(p.vencimento).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <p class="text-[11px] font-semibold ${p.diff < 0 ? 'text-danger' : p.diff === 0 ? 'text-warning' : 'text-primary'}">
+                        ${p.diff < 0 ? `Atrasado ${-p.diff}d` : p.diff === 0 ? 'Vence hoje' : p.diff === 1 ? 'Amanhã' : `Em ${p.diff} dias`}
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-gray-800 text-sm">R$ ${p.valorFormatado}</span>
+                    <button onclick="marcarComoPago(${p.id})" class="btn-pagar bg-white shadow-sm hover:bg-blue-50">
+                        Pagar
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+
+        return `
+        <div class="border border-gray-100 rounded-xl p-3 bg-white shadow-sm mb-4 last:mb-0">
+            <!-- Cabeçalho Único do Cliente -->
+            <div class="flex items-center justify-between gap-2 border-b border-gray-100 pb-2.5 mb-3">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="initial-circle flex-shrink-0" style="background:${cor}">${iniciais}</div>
                     <div class="truncate">
-                        <div class="flex items-center gap-2 truncate">
-                            <span class="font-semibold text-gray-800 text-sm sm:text-base truncate capitalize">${cliente.nome}</span>
-                            ${e.numeroParcela ? `<span class="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 rounded font-medium border border-blue-100 flex-shrink-0">Parc. ${e.numeroParcela}/${e.totalParcelas}</span>` : ''}
-                        </div>
-                        <p class="text-xs text-gray-400 mt-0.5">Venc: ${venc.toLocaleDateString('pt-BR')}</p>
+                        <span class="font-bold text-gray-800 text-base capitalize block truncate">${c.nome}</span>
+                        <p class="text-xs text-gray-400">Total de pendências: ${bloco.parcelas.length}</p>
                     </div>
                 </div>
-                <div class="text-right flex-shrink-0">
-                    <p class="font-bold text-gray-800 text-sm sm:text-base">R$ ${valorFinal}</p>
-                    <p class="text-[11px] font-medium ${diff < 0 ? 'text-danger' : diff <= 3 ? 'text-warning' : 'text-primary'}">
-                        ${diff < 0 ? `Atrasado ${-diff}d` : diff === 0 ? 'Vence hoje' : diff === 1 ? 'Amanhã' : `Em ${diff} dias`}
-                    </p>
-                </div>
-            </div>
-            <div class="flex items-center justify-end gap-2 pl-12">
-                <a href="${linkWpp}" target="_blank" class="w-8 h-8 rounded-lg bg-green-50 border border-green-200 flex items-center justify-center text-green-600 hover:bg-green-100 transition-colors" title="Enviar mensagem">
-                    <i class="fa fa-whatsapp text-lg"></i>
+                <a href="${linkWpp}" target="_blank" class="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-green-600 hover:bg-green-100 transition-colors flex-shrink-0" title="Cobrar todas via WhatsApp">
+                    <i class="fa fa-whatsapp text-xl"></i>
                 </a>
-                <button onclick="marcarComoPago(${e.id})" class="btn-pagar !py-1.5 !px-3 !text-xs !bg-white hover:!bg-blue-50 shadow-sm">
-                    Marcar como Pago
-                </button>
+            </div>
+            <!-- Sublista de parcelas agrupadas -->
+            <div class="space-y-2">
+                ${htmlParcelas}
             </div>
         </div>`;
-
-        if (diff < 0) atraso.push(item);
-        else proximos.push(item);
-    });
-
-    document.getElementById('listaProximos').innerHTML = proximos.length ? proximos.join('') : `<div class="text-center text-gray-500 py-6">Nenhuma parcela ativa nos próximos dias.</div>`;
-    document.getElementById('listaAtraso').innerHTML = atraso.length ? atraso.join('') : `<div class="text-center text-gray-500 py-6">Nenhuma parcela em atraso.</div>`;
+    }).join('');
 }
 
 function atualizarHistoricoPagos() {
@@ -836,7 +874,7 @@ document.getElementById('formEmprestimo').addEventListener('submit', e => {
 
 function mostrarMensagem(texto) {
     const msg = document.getElementById('msgSucesso');
-    msg.textContent = text;
+    msg.textContent = texto;
     msg.classList.remove('hidden');
     setTimeout(() => msg.classList.add('hidden'), 2500);
 }
