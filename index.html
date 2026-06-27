@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- ✅ CONFIGURAÇÃO COMPLETA PARA INSTALAR COMO APLICATIVO -->
+    <!-- ✅ CONFIGURAÇÃO PARA FUNCIONAR COMO APP - ANDROID E IPHONE -->
     <title>Meus Empréstimos</title>
     <meta name="application-name" content="Meus Empréstimos">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,25 +13,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#2563EB">
 
-    <!-- ✅ Ícone e Manifesto funcional para instalação -->
+    <!-- ✅ Ícone e Manifesto embutido -->
     <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/4Yv0j2s/icone-app.png">
-    <link rel="manifest" href="data:application/json;charset=utf-8,{
-        "name": "Meus Empréstimos",
-        "short_name": "Empréstimos",
-        "start_url": ".",
-        "display": "standalone",
-        "background_color": "#F8FAFC",
-        "theme_color": "#2563EB",
-        "icons": [
-            {
-                "src": "https://i.ibb.co/4Yv0j2s/icone-app.png",
-                "sizes": "192x192",
-                "type": "image/png",
-                "purpose": "any maskable"
-            }
-        ]
-    }">
+    <link rel="manifest" href='data:application/json;base64,eyJuYW1lIjoiTWV1cyBFbXByw6lzdGltb3MiLCJzaG9ydF9uYW1lIjoiRW1wcsOpc3RpbW9zIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNGOEZBRkNDIiwidGhlbWVfY29sb3IiOiIjMjU2M0VCIiwic2NvcGUiOiIvIiwiaWNvbnMiOlt7InNvdXJjZSI6Imh0dHBzOi8vaS5pYmIuY28vNFl2MGoycy9pY29uZS1hcHAucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIDE4MHgxODAgOTZ4OTYgNzZ4NzYgNTZ4NTYiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZXMiOiJhbnlsaXN0IG1hc2thYmxlIn1dfQ=='>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -64,36 +49,21 @@
         .btn-pagar:hover { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; }
         .btn-desfazer { font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; font-weight: 500; transition: all 0.2s; cursor: pointer; margin-left: 6px; }
         .btn-desfazer:hover { background: #FEE2E2; border-color: #EF4444; }
-
-        /* ✅ NOVO: Aviso simples para instalar como app */
-        .aviso-instalar {
-            position: fixed;
-            bottom: 90px;
-            left: 15px;
-            right: 15px;
-            background: #ffffff;
-            padding: 12px 16px;
-            border-radius: 10px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.18);
-            border: 1px solid #e2e8f0;
-            z-index: 999;
-            display: none;
-        }
-        .aviso-instalar p { margin: 0 0 8px 0; font-size: 13px; color: #334155; }
-        .aviso-instalar button {
-            padding: 5px 10px; border-radius: 5px; border: none; font-size: 12px; font-weight: 500; cursor: pointer;
-        }
-        .btn-add { background: #2563EB; color: white; margin-right: 8px; }
-        .btn-later { background: #f1f5f9; color: #475569; }
+        .aviso-instalar { position: fixed; bottom: 90px; left: 15px; right: 15px; background: #ffffff; padding: 12px 15px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.18); z-index: 9999; display: none; align-items: center; justify-content: space-between; gap: 10px; }
     </style>
 </head>
 <body class="text-gray-800">
 
-<!-- ✅ NOVO: Aviso de instalação -->
-<div id="avisoAddTela" class="aviso-instalar">
-    <p>📱 Adicione este aplicativo na tela inicial para acessar mais rápido!</p>
-    <button id="botaoInstalar" class="btn-add">Adicionar agora</button>
-    <button onclick="fecharAvisoInstalar()" class="btn-later">Depois</button>
+<!-- ✅ AVISO DE INSTALAÇÃO -->
+<div id="avisoInstalar" class="aviso-instalar">
+    <div>
+        <p class="font-medium text-gray-800">📱 Instalar como App</p>
+        <p class="text-xs text-gray-500">Acesse direto da tela inicial</p>
+    </div>
+    <div class="flex gap-2 items-center">
+        <button onclick="fecharAvisoInstalar()" class="text-gray-500 text-sm px-2 py-1">Depois</button>
+        <button id="botaoInstalar" class="bg-primary text-white text-sm px-3 py-1 rounded-md font-medium">Instalar</button>
+    </div>
 </div>
 
 <!-- Menu Lateral -->
@@ -110,6 +80,9 @@
             <i class="fa fa-upload text-gray-600"></i> Restaurar Backup
             <input type="file" id="inputRestaurar" class="hidden" accept=".json">
         </label>
+        <button onclick="iniciarInstalacao()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
+            <i class="fa fa-mobile text-gray-600"></i> Baixar / Instalar App
+        </button>
         <hr class="my-3">
         <button onclick="mostrarTela('telaInicio'); fecharMenu()" class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
             <i class="fa fa-home text-gray-600"></i> Início
@@ -147,7 +120,6 @@
         </header>
 
         <main class="px-4 py-5">
-            <!-- ✅ Cards Resumo com Total Pago -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <div class="bg-white rounded-xl shadow p-4">
                     <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mb-2">
@@ -183,7 +155,6 @@
                 </div>
             </div>
 
-            <!-- Próximos Vencimentos -->
             <div class="mb-5">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-gray-800">Empréstimos Próximos do Vencimento</h3>
@@ -194,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- Em Atraso -->
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold text-gray-800">Empréstimos em Atraso</h3>
@@ -205,7 +175,6 @@
                 </div>
             </div>
 
-            <!-- Menu Principal -->
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
                     <div class="flex items-center gap-3">
@@ -424,7 +393,6 @@
                 </button>
             </form>
 
-            <!-- Resultado da Simulação -->
             <div id="resultadoSimulacao" class="mt-6 hidden bg-purple-50 border border-purple-200 rounded-xl p-4 space-y-3">
                 <h3 class="font-semibold text-purple-800 text-center">📋 Resultado da Simulação</h3>
                 <div class="grid grid-cols-2 gap-2 text-sm">
@@ -475,29 +443,44 @@
 </div>
 
 <script>
-// ✅ NOVA FUNÇÃO: Instalação como Aplicativo
-let promptInstalacao;
+// ✅ Sistema de Instalação
+let deferredInstallPrompt = null;
+
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
-    promptInstalacao = e;
-    document.getElementById('avisoAddTela').style.display = 'block';
-});
-
-document.getElementById('botaoInstalar').addEventListener('click', async () => {
-    if (promptInstalacao) {
-        promptInstalacao.prompt();
-        const { outcome } = await promptInstalacao.userChoice;
-        promptInstalacao = null;
-    }
-    fecharAvisoInstalar();
-    mostrarMensagem('Adicionado à tela inicial!');
+    deferredInstallPrompt = e;
+    setTimeout(() => {
+        if (!window.matchMedia('(display-mode: standalone)').matches) {
+            document.getElementById('avisoInstalar').style.display = 'flex';
+        }
+    }, 3000);
 });
 
 function fecharAvisoInstalar() {
-    document.getElementById('avisoAddTela').style.display = 'none';
+    document.getElementById('avisoInstalar').style.display = 'none';
 }
 
-// Controle do Menu Lateral
+function iniciarInstalacao() {
+    if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((resultado) => {
+            mostrarMensagem(resultado.outcome === 'accepted' ? '✅ App instalado!' : 'ℹ️ Você pode instalar depois pelo menu');
+            deferredInstallPrompt = null;
+            fecharAvisoInstalar();
+        });
+    } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            alert('📱 No iPhone: Toque em Compartilhar ⤴️ → Adicionar à Tela de Início');
+        } else {
+            alert('📱 No Android: Toque nos 3 pontos → Adicionar à tela inicial');
+        }
+    }
+}
+
+document.getElementById('botaoInstalar').addEventListener('click', iniciarInstalacao);
+
+// ✅ Controles Gerais
 function abrirMenu() {
     document.getElementById('menuLateral').classList.add('aberto');
     document.getElementById('overlay').classList.add('ativo');
@@ -537,7 +520,6 @@ function somarMeses(data, meses) {
     return novaData.toISOString().split('T')[0];
 }
 
-// Backup e Restaurar
 function baixarBackup() {
     const blob = new Blob([JSON.stringify(dados)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
@@ -554,20 +536,18 @@ document.getElementById('inputRestaurar').addEventListener('change', e => {
     const leitor = new FileReader();
     leitor.onload = evento => {
         try {
-            const dadosRestaurados = JSON.parse(evento.target.result);
-            dados = dadosRestaurados;
+            dados = JSON.parse(evento.target.result);
             salvarDados();
             mostrarMensagem('Dados restaurados com sucesso!');
         } catch {
-            mostrarMensagem('Arquivo inválido!');
+            mostrarMensagem('Arquivo de backup inválido!');
         }
     };
     leitor.readAsText(arquivo);
 });
 
-// ✅ Marcar como Pago
 function marcarComoPago(id) {
-    if (!confirm('Deseja confirmar o pagamento desta parcela?')) return;
+    if (!confirm('Confirmar pagamento desta parcela?')) return;
     const index = dados.emprestimos.findIndex(e => e.id === id);
     if (index !== -1) {
         const parcela = dados.emprestimos.splice(index, 1)[0];
@@ -578,20 +558,18 @@ function marcarComoPago(id) {
     }
 }
 
-// ✅ Nova função: DESFAZER PAGAMENTO
 function desfazerPagamento(id) {
-    if (!confirm('Deseja desfazer este pagamento? A parcela voltará para a lista de abertos.')) return;
+    if (!confirm('Desfazer este pagamento?')) return;
     const index = dados.pagos.findIndex(p => p.id === id);
     if (index !== -1) {
         const parcela = dados.pagos.splice(index, 1)[0];
         delete parcela.dataPagamento;
         dados.emprestimos.push(parcela);
         salvarDados();
-        mostrarMensagem('Pagamento desfeito! Parcela voltou ao controle.');
+        mostrarMensagem('Pagamento desfeito!');
     }
 }
 
-// Funções da Simulação
 let simulacaoAtual = {};
 
 function calcularSimulacao() {
@@ -608,24 +586,17 @@ function calcularSimulacao() {
         return;
     }
     if (forma === 'parcelado' && (!qtdParcelas || qtdParcelas < 2)) {
-        alert('Informe a quantidade de parcelas (mínimo 2)!');
+        alert('Informe a quantidade de parcelas!');
         return;
     }
 
     const valorTotal = valor * (1 + juros / 100);
     let valorParcela = 0;
-    let descricaoForma = '';
-
-    if (forma === 'unico') {
-        descricaoForma = 'Pagamento Único';
-    } else {
-        valorParcela = valorTotal / qtdParcelas;
-        descricaoForma = `${qtdParcelas}x de R$ ${valorParcela.toFixed(2).replace('.', ',')}`;
-    }
+    const descricaoForma = forma === 'unico' ? 'Pagamento Único' : `${qtdParcelas}x de R$ ${(valorTotal / qtdParcelas).toFixed(2).replace('.', ',')}`;
+    if (forma === 'parcelado') valorParcela = valorTotal / qtdParcelas;
 
     simulacaoAtual = { nome, fone, valor, juros, valorTotal, valorParcela, forma, qtdParcelas, vencimento };
 
-    // Preencher resultado
     document.getElementById('resValor').textContent = valor.toFixed(2).replace('.', ',');
     document.getElementById('resJuros').textContent = juros.toFixed(2).replace('.', ',');
     document.getElementById('resTotal').textContent = valorTotal.toFixed(2).replace('.', ',');
@@ -647,33 +618,28 @@ function enviarSimulacaoWhatsapp() {
     const s = simulacaoAtual;
     if (!s.nome) return;
 
-    let mensagem = `Olá ${s.nome}! Tudo bem?\n\nSegue a simulação do seu empréstimo:\n\n`;
+    let mensagem = `Olá ${s.nome}! Tudo bem?\n\n📋 Simulação do empréstimo:\n\n`;
     mensagem += `• Valor solicitado: R$ ${s.valor.toFixed(2).replace('.', ',')}\n`;
     mensagem += `• Taxa de juros: ${s.juros.toFixed(2).replace('.', ',')}%\n`;
-    mensagem += `• Valor total a pagar: R$ ${s.valorTotal.toFixed(2).replace('.', ',')}\n`;
+    mensagem += `• Total a pagar: R$ ${s.valorTotal.toFixed(2).replace('.', ',')}\n`;
 
     if (s.forma === 'unico') {
-        mensagem += `• Forma de pagamento: Único\n`;
         mensagem += `• Vencimento: ${new Date(s.vencimento).toLocaleDateString('pt-BR')}\n`;
     } else {
-        mensagem += `• Forma de pagamento: ${s.qtdParcelas} parcelas mensais\n`;
-        mensagem += `• Valor de cada parcela: R$ ${s.valorParcela.toFixed(2).replace('.', ',')}\n`;
-        mensagem += `• Primeiro vencimento: ${new Date(s.vencimento).toLocaleDateString('pt-BR')}\n`;
+        mensagem += `• ${s.qtdParcelas}x de R$ ${s.valorParcela.toFixed(2).replace('.', ',')}\n`;
+        mensagem += `• 1º vencimento: ${new Date(s.vencimento).toLocaleDateString('pt-BR')}\n`;
     }
 
-    mensagem += `\nFicou interessado? É só me avisar! 😊`;
+    mensagem += `\nFicou interessado? Me avise! 😊`;
 
     const link = `https://wa.me/55${s.fone}?text=${encodeURIComponent(mensagem)}`;
     window.open(link, '_blank');
 }
 
-// ✅ Atualização completa com Total Pago
 function atualizarDados() {
     const hoje = new Date();
     hoje.setHours(0,0,0,0);
-    let totalEmp = 0, totalRec = 0, totalPago = 0;
-    let qtd = dados.emprestimos.length, qtdPg = 0;
-    let abertos = 0;
+    let totalEmp = 0, totalRec = 0, totalPago = 0, abertos = 0;
 
     dados.emprestimos.forEach(e => {
         const venc = new Date(e.vencimento);
@@ -683,20 +649,16 @@ function atualizarDados() {
         if (venc >= hoje) abertos++;
     });
 
-    dados.pagos.forEach(p => {
-        const valorPg = p.valorParcela || (p.valor * (1 + p.juros / 100));
-        totalPago += valorPg;
-        qtdPg++;
-    });
+    dados.pagos.forEach(p => totalPago += p.valorParcela || (p.valor * (1 + p.juros / 100)));
 
     document.getElementById('totalEmprestado').textContent = totalEmp.toFixed(2).replace('.', ',');
     document.getElementById('totalReceber').textContent = totalRec.toFixed(2).replace('.', ',');
     document.getElementById('totalAberto').textContent = totalRec.toFixed(2).replace('.', ',');
     document.getElementById('totalPago').textContent = totalPago.toFixed(2).replace('.', ',');
-    document.getElementById('qtdContratos').textContent = dados.emprestimos.reduce((acc, e) => acc + (e.numeroParcela ? 1 : 1), 0);
-    document.getElementById('qtdContratos2').textContent = qtd;
+    document.getElementById('qtdContratos').textContent = dados.emprestimos.length;
+    document.getElementById('qtdContratos2').textContent = dados.emprestimos.length;
     document.getElementById('qtdAberto').textContent = abertos;
-    document.getElementById('qtdPago').textContent = qtdPg;
+    document.getElementById('qtdPago').textContent = dados.pagos.length;
 
     atualizarListasVencimento();
     atualizarListaClientes();
@@ -704,16 +666,13 @@ function atualizarDados() {
     atualizarHistoricoPagos();
 }
 
-// ✅ Botão refeito: Marcar como Pago
 function atualizarListasVencimento() {
     const hoje = new Date();
     hoje.setHours(0,0,0,0);
-    const proximos = [];
-    const atraso = [];
+    const proximos = [], atraso = [];
 
     dados.emprestimos.forEach(e => {
         const venc = new Date(e.vencimento);
-        venc.setHours(0,0,0,0);
         const diff = Math.ceil((venc - hoje) / (1000*60*60*24));
         const cliente = dados.clientes.find(c => c.id === e.clienteId);
         if (!cliente) return;
@@ -723,7 +682,7 @@ function atualizarListasVencimento() {
         const cor = diff < 0 ? '#EF4444' : diff <= 3 ? '#F59E0B' : '#2563EB';
         const infoParcela = e.numeroParcela ? ` | Parcela ${e.numeroParcela}/${e.totalParcelas}` : '';
 
-        const mensagem = `Olá ${cliente.nome}! Lembrando que sua parcela de R$ ${valorFinal} vence no dia ${venc.toLocaleDateString('pt-BR')}${infoParcela}. Contamos com o pagamento!`;
+        const mensagem = `Olá ${cliente.nome}! Lembrando: parcela R$ ${valorFinal} vence dia ${venc.toLocaleDateString('pt-BR')}${infoParcela}.`;
         const linkWpp = `https://wa.me/55${cliente.fone}?text=${encodeURIComponent(mensagem)}`;
 
         const item = `
@@ -732,56 +691,48 @@ function atualizarListasVencimento() {
                 <div class="initial-circle" style="background:${cor}">${iniciais}</div>
                 <div>
                     <p class="font-medium text-gray-800">${cliente.nome}${infoParcela}</p>
-                    <p class="text-xs text-gray-500">Vencimento: ${venc.toLocaleDateString('pt-BR')}</p>
+                    <p class="text-xs text-gray-500">Venc: ${venc.toLocaleDateString('pt-BR')}</p>
                 </div>
             </div>
             <div class="text-right">
-                <p class="font-semibold text-gray-800">R$ ${valorFinal}</p>
+                <p class="font-semibold">R$ ${valorFinal}</p>
                 <p class="text-xs ${diff < 0 ? 'text-danger' : diff <=3 ? 'text-warning' : 'text-gray-500'}">
-                    ${diff < 0 ? `Atrasado ${-diff} dias` : diff === 0 ? 'Vence hoje' : diff === 1 ? 'Amanhã' : `Em ${diff} dias`}
+                    ${diff < 0 ? `Atraso ${-diff}d` : diff === 0 ? 'Vence hoje' : `Em ${diff}d`}
                 </p>
             </div>
-            <div class="flex gap-2 items-center">
-                <a href="${linkWpp}" target="_blank" class="text-green-500 text-xl" title="Enviar mensagem">
-                    <i class="fa fa-whatsapp"></i>
-                </a>
-                <button onclick="marcarComoPago(${e.id})" class="btn-pagar">
-                    Marcar como Pago
-                </button>
+            <div class="flex gap-2">
+                <a href="${linkWpp}" target="_blank" class="text-green-500 text-xl"><i class="fa fa-whatsapp"></i></a>
+                <button onclick="marcarComoPago(${e.id})" class="btn-pagar">Pago</button>
             </div>
         </div>`;
 
-        if (diff < 0) atraso.push(item);
-        else proximos.push(item);
+        diff < 0 ? atraso.push(item) : proximos.push(item);
     });
 
-    document.getElementById('listaProximos').innerHTML = proximos.length ? proximos.join('') : `<div class="text-center text-gray-500 py-6">Nenhuma parcela ativa nos próximos dias.</div>`;
-    document.getElementById('listaAtraso').innerHTML = atraso.length ? atraso.join('') : `<div class="text-center text-gray-500 py-6">Nenhuma parcela em atraso.</div>`;
+    document.getElementById('listaProximos').innerHTML = proximos.join('') || `<div class="text-center text-gray-500 py-6">Nenhuma parcela próxima.</div>`;
+    document.getElementById('listaAtraso').innerHTML = atraso.join('') || `<div class="text-center text-gray-500 py-6">Nenhuma parcela em atraso.</div>`;
 }
 
-// ✅ Histórico com botão DESFAZER
 function atualizarHistoricoPagos() {
     const lista = document.getElementById('listaPagos');
-    if (dados.pagos.length === 0) {
-        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhuma parcela paga ainda.</div>`;
+    if (!dados.pagos.length) {
+        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhuma parcela paga.</div>`;
         return;
     }
     lista.innerHTML = dados.pagos.map(e => {
-        const cliente = dados.clientes.find(c => c.id === e.clienteId) || { nome: 'Cliente excluído' };
+        const cliente = dados.clientes.find(c => c.id === e.clienteId) || { nome: 'Cliente removido' };
         const valorFinal = (e.valorParcela || (e.valor * (1 + e.juros / 100))).toFixed(2).replace('.', ',');
         const infoParcela = e.numeroParcela ? ` | Parcela ${e.numeroParcela}/${e.totalParcelas}` : '';
         return `
-        <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between flex-wrap gap-2">
+        <div class="bg-white rounded-lg shadow p-4 flex justify-between items-center flex-wrap gap-2">
             <div>
-                <p class="font-medium text-gray-800">${cliente.nome}${infoParcela}</p>
-                <p class="text-xs text-gray-500">Vencimento: ${new Date(e.vencimento).toLocaleDateString('pt-BR')}</p>
-                <p class="text-xs text-success">Pago em: ${e.dataPagamento}</p>
+                <p class="font-medium">${cliente.nome}${infoParcela}</p>
+                <p class="text-xs text-gray-500">Venc: ${new Date(e.vencimento).toLocaleDateString('pt-BR')}</p>
+                <p class="text-xs text-success">Pago: ${e.dataPagamento}</p>
             </div>
             <div class="text-right">
                 <p class="font-semibold text-success">R$ ${valorFinal}</p>
-                <button onclick="desfazerPagamento(${e.id})" class="btn-desfazer mt-1">
-                    Desfazer
-                </button>
+                <button onclick="desfazerPagamento(${e.id})" class="btn-desfazer mt-1">Desfazer</button>
             </div>
         </div>`;
     }).join('');
@@ -800,31 +751,45 @@ document.getElementById('formCliente').addEventListener('submit', e => {
     dados.clientes.push(cliente);
     salvarDados();
     e.target.reset();
-    mostrarMensagem('Cliente cadastrado com sucesso!');
+    mostrarMensagem('Cliente cadastrado!');
 });
 
 function atualizarListaClientes() {
     const lista = document.getElementById('listaClientes');
-    if(dados.clientes.length === 0) {
-        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhum cliente cadastrado ainda.</div>`;
+    if (!dados.clientes.length) {
+        lista.innerHTML = `<div class="bg-white rounded-lg shadow p-6 text-center text-gray-500">Nenhum cliente cadastrado.</div>`;
         return;
     }
     lista.innerHTML = dados.clientes.map(c => `
-        <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between gap-2">
-            <div class="flex-1">
-                <p class="font-medium text-gray-800">${c.nome}</p>
+        <div class="bg-white rounded-lg shadow p-4 flex justify-between items-center">
+            <div>
+                <p class="font-medium">${c.nome}</p>
                 <p class="text-xs text-gray-500">📞 ${c.fone} | 📍 ${c.endereco}, ${c.numero} - ${c.bairro}</p>
             </div>
-            <div class="flex gap-3 items-center">
-                <a href="https://wa.me/55${c.fone}" target="_blank" class="text-green-500 text-xl" title="Enviar mensagem">
-                    <i class="fa fa-whatsapp"></i>
-                </a>
-                <button onclick="removerCliente(${c.id})" class="text-red-500 text-sm font-medium">Excluir</button>
+            <div class="flex gap-3">
+                <a href="https://wa.me/55${c.fone}" target="_blank" class="text-green-500 text-xl"><i class="fa fa-whatsapp"></i></a>
+                <button onclick="removerCliente(${c.id})" class="text-red-500 text-sm">Excluir</button>
             </div>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
 
 function atualizarSelectClientes() {
     const select = document.getElementById('clienteEmprestimo');
-    select.innerHTML = `<option value="">-- Escolha
+    select.innerHTML = `<option value="">-- Escolha um cliente --</option>`;
+    dados.clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
+}
+
+function removerCliente(id) {
+    dados.clientes = dados.clientes.filter(c => c.id !== id);
+    dados.emprestimos = dados.emprestimos.filter(e => e.clienteId !== id);
+    dados.pagos = dados.pagos.filter(e => e.clienteId !== id);
+    salvarDados();
+    mostrarMensagem('Cliente removido!');
+}
+
+document.getElementById('formEmprestimo').addEventListener('submit', e => {
+    e.preventDefault();
+    const clienteId = Number(document.getElementById('clienteEmprestimo').value);
+    const valor = Number(document.getElementById('valorEmprestimo').value);
+    const juros = Number(document.getElementById('jurosEmprestimo').value);
+    const vencimento = document.getElementById('vencimento
