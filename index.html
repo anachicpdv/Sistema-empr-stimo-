@@ -6,19 +6,17 @@
     
     <!-- ✅ Configuração COMPLETA para abrir como APP sem barra -->
     <title>Meus Empréstimos</title>
-    <meta name="application-name" content="Meus Empréstimos">
+    <meta name="application-name" content="Sistema de Empréstimos">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Empréstimos">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#2563EB">
-    <meta name="description" content="Gerenciador completo de empréstimos">
 
-    <!-- ✅ Ícone e Manifest corretos -->
-    <link rel="icon" type="image/png" sizes="192x192" href="icone-sistema.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icone-sistema.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icone-sistema.png">
+    <!-- ✅ Link correto para o seu manifesto -->
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icone-sistema.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icone-sistema.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -164,7 +162,7 @@
                 </div>
             </div>
 
-            <!-- ✅ MENU PRINCIPAL - BOTÃO ADICIONADO AQUI -->
+            <!-- Menu Principal -->
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="mostrarTela('telaClientes')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
                     <div class="flex items-center gap-3">
@@ -179,7 +177,6 @@
                     <i class="fa fa-angle-right text-gray-400"></i>
                 </button>
 
-                <!-- 🟢 NOVO BOTÃO ADICIONADO -->
                 <button onclick="mostrarTela('telaLancar')" class="bg-white rounded-xl shadow p-4 flex items-center justify-between w-full text-left">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
@@ -241,7 +238,6 @@
         </nav>
     </div>
 
-    <!-- RESTO DO CÓDIGO 100% ORIGINAL ABAIXO -->
     <!-- Tela Clientes -->
     <div id="telaClientes" class="page hidden pb-20">
         <header class="bg-gray-50 border-b px-4 py-4 flex items-center gap-3">
