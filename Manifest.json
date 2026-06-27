@@ -1,20 +1,19 @@
 {
-  "name": "Meus Empréstimos",
+  "name": "Sistema de Empréstimos",
   "short_name": "Empréstimos",
-  "start_url": "/",
+  "start_url": "/Sistema-empr-stimo-/",
   "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#2563EB",
-  "background_color": "#F8FAFC",
+  "theme_color": "#0D47A1",
+  "background_color": "#ffffff",
   "icons": [
     {
-      "src": "https://i.ibb.co/4Yv0j2s/icone-app.png",
+      "src": "icone-sistema.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/4Yv0j2s/icone-app.png",
+      "src": "icone-sistema.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
